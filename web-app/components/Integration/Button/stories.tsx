@@ -1,7 +1,7 @@
 import React from 'react';
 import Button from './index';
 
-export default {
+const config = {
 	component: Button,
 	title: 'Integration / Button',
 };
@@ -20,3 +20,5 @@ Twitch.args = {
 	integration: 'twitch',
 	redirectUri,
 };
+
+export default config;
