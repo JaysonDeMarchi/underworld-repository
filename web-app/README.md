@@ -32,3 +32,4 @@ Open [http://localhost:3000](http://localhost:3000) with your browser to see the
 |format|coding styles updates|
 |refactor|refactor updates|
 |test|test automation updates|
+|theme|styling updates|
