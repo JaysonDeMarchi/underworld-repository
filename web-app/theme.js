@@ -1,7 +1,7 @@
-import { roboto } from '@theme-ui/presets'
+import { roboto } from '@theme-ui/presets';
 
 const theme = {
-  ...roboto,
+	...roboto,
 	colors: {
 		discordBlue: '#5865F2',
 		twitchPurple: '#9146FF',
@@ -16,6 +16,6 @@ const theme = {
 			bg: 'twitchPurple',
 		},
 	},
-}
+};
 
-export default theme
+export default theme;
