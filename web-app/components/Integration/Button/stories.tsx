@@ -7,10 +7,16 @@ export default {
 };
 
 const Template = args => <Button {...args} />;
+const redirectUri = 'http://localhost:6006/';
+
+export const Discord = Template.bind({});
+Discord.args = {
+	integration: 'discord',
+	redirectUri,
+};
 
 export const Twitch = Template.bind({});
 Twitch.args = {
-	id: 'connect-to-twitch',
-	label: 'Connect with Twitch',
-	url: 'https://twitch.tv/',
+	integration: 'twitch',
+	redirectUri,
 };

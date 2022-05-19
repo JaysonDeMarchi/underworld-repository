@@ -14,7 +14,7 @@ Open [http://localhost:3000](http://localhost:3000) with your browser to see the
 
 ### commit message formatting
 ```
-{type}({scope}): {title}
+{icon/type}({scope}): {title}
 
 {body}
 
@@ -22,13 +22,14 @@ Open [http://localhost:3000](http://localhost:3000) with your browser to see the
 ```
 
 ### supported types
-|type|description|
-|---|---|
-|build|build system or external dependencies updates|
-|ci|CICD configuration updates|
-|docs|documentation updates|
-|feature|functionality updates|
-|fix|bug fixes|
-|format|coding styles updates|
-|refactor|refactor updates|
-|test|test automation updates|
+|icon|type|description|
+|---|---|---|
+|👷|build|build system or external dependencies updates|
+|🔁|ci|CICD configuration updates|
+|📝|docs|documentation updates|
+|🗻|feature|functionality updates|
+|🧯|fix|bug fixes|
+|🧱|format|coding styles updates|
+|🧹|refactor|refactor updates|
+|🧪|test|test automation updates|
+|🎨|theme|styling updates|
