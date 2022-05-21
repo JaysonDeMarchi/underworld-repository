@@ -14,11 +14,10 @@ exports.pointLog = (pointValue, targetFaction, userId, username, memo) => {
         if (err) throw err
 
         var discordId,discordUsername,userTotal,userPositive,userNegative, factionTotal,factionPositive,factionNegative
-        if (document.discordID !== undefined){
+        if (document.discordID !== undefined) {
             discordId = document["discordID"]
             discordUsername = document["nickname"]
-        }
-        else{
+        } else {
             discordId = ""
             discordUsername = ""
         }
@@ -52,7 +51,7 @@ exports.tokenLog = (access_token, refresh_token) => {
     return dbo.collection("twitchClientTokenLog").insertOne(logObj, function (err, logDoc) {
         if (err)
             throw err;
-        
+
         return 1;
     });
 }
@@ -62,14 +61,14 @@ exports.ahogeLog = (pointValue,pointSource) => {
     var dbo = mongoHandler.getDb()
 
     filter = {"discordServer": process.env.DISCORD_SERVER_ID,"dateEnded":{"$exists":false}}
-    
+
     logUpdateObj = {"$inc":{"total": parseInt(pointValue)}}
     // must be added dynamically to use variable as column name
     logUpdateObj["$inc"][pointSource] = parseInt(pointValue)
 
     return dbo.collection("ahogeLog").findOneAndUpdate(filter, logUpdateObj, {"returnOriginal": false}, function (err, logDoc) {
         if (err) throw err;
-        
+
         return 1;
     });
 }

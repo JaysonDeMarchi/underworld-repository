@@ -29,7 +29,7 @@ const redeemDict = {
 //"2b4eb5c1-6976-44c1-b31a-13918491ff9f": "undead add 5"} // life advice
 
 exports.parseFactionPoints = (event) => {
-    if( event.reward.id in redeemDict ){
+    if (event.reward.id in redeemDict) {
         const date = new Date().toISOString().slice(0,19)
 
         // get configuration arguments
@@ -37,7 +37,7 @@ exports.parseFactionPoints = (event) => {
 
         // set targeted faction
         var targetFaction = "";
-        if( redeemArgs[0] == "user_input"){
+        if (redeemArgs[0] == "user_input") {
             var requestedFaction = event.user_input.toLowerCase();
             if (requestedFaction.includes("creature")) { targetFaction = "creatures" }
             else if (requestedFaction.includes("undead")) { targetFaction = "undead" }
@@ -45,39 +45,38 @@ exports.parseFactionPoints = (event) => {
             else{
                 console.log(`${date} ERR: "${event.reward.title}" redeem failed to parse target faction from "${requestedFaction}"`,event);
             }
-        }
-        else{
+        } else {
             targetFaction = redeemArgs[0];
         }
 
         // set add/remove points and value
         var pointDirection = redeemArgs[1];
         var pointValue = parseInt(redeemArgs[2]);
-        
+
         // generate update/filter queries
         var update;
-        if ( pointDirection === "add" )
+        if (pointDirection === "add")
             update = {"$inc":{"total":pointValue,"positive":pointValue}};
         else
             update = {"$inc":{"total":pointValue*-1,"negative":pointValue}};
 
         var filter = {"faction": targetFaction, "discordServer": process.env.DISCORD_SERVER_ID, "sprintEnd":{"$exists":false}}
-        
+
         var dbo = mongoHandler.getDb()
 
         return dbo.collection("sprints").findOneAndUpdate(filter,update, {"returnOriginal": false}, function (err, factionDoc) {
             if (err) throw err;
 
-            console.log( `${date} ${pointValue} points ${(pointDirection=="add")?"to":"from"} ${targetFaction}. Redeem "${event.reward.title}", User ${event.user_name}` );
+            console.log(`${date} ${pointValue} points ${(pointDirection=="add")?"to":"from"} ${targetFaction}. Redeem "${event.reward.title}", User ${event.user_name}`);
 
             // Mark Redeem As Completed
             //console.log("attempting complete reward")
             //completeRedeem(event.reward.id,event.id)
 
             // update user's points. Only add to total if its points in the positive direction
-            updateUserPoints((pointDirection === "add")?pointValue:0,pointDirection,event.user_id,event.user_name).then( () => {
+            updateUserPoints((pointDirection === "add") ? pointValue : 0, pointDirection, event.user_id, event.user_name).then(() => {
                 // log point event
-                pointLog((pointDirection==="remove")?pointValue*-1:pointValue,targetFaction,event.user_id,event.user_name,event.reward.title)
+                pointLog((pointDirection === "remove") ? pointValue * -1 : pointValue, targetFaction, event.user_id, event.user_name, event.reward.title)
             })
             return 1;
         });
@@ -155,7 +154,7 @@ exports.parseFactionPoints = (event) => {
 //                 'Content-Type': 'application/x-www-form-urlencoded'
 //             }
 //         };
-    
+
 //         var refreshRequestBody = {
 //             "grant_type": "refresh_token",
 //             "refresh_token": currentRefreshToken,
@@ -219,7 +218,7 @@ exports.parseFactionPoints = (event) => {
 //     try{
 //         MongoClient.connect(process.env.CONN_STRING, function(err, db) {
 //             if (err) throw err;
-            
+
 //             var dbo = db.db("master");
 
 //             // insert new tokens into log
@@ -228,7 +227,7 @@ exports.parseFactionPoints = (event) => {
 //             return dbo.collection("twitchClientTokenLog").insertOne(logObj, function (err, logDoc) {
 //                 if (err)
 //                     throw err;
-                
+
 //                 return 1;
 //             });
 //         });
@@ -236,4 +235,4 @@ exports.parseFactionPoints = (event) => {
 //     catch (ex) {
 //         console.error(ex);
 //     }
-// }
+//

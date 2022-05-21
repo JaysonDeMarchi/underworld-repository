@@ -33,17 +33,17 @@ exports.getEventSubSubscriptions = () => {
         })
         .on('end', function(result) {
             var responseBody = JSON.parse(responseData);
-            
+
             // parse subscription list for redeem sub
-            if(responseBody.hasOwnProperty("data")){
+            if (responseBody.hasOwnProperty("data")) {
                 responseBody.data.forEach(sub => {
                     // Add as active redeem if good status, for this callback url, and is of requested type
-                    if(sub.status === "enabled" && sub.transport.callback === callbackUrl+"/notification" && sub.transport.method === "webhook" && ActiveSubscriptions.hasOwnProperty(sub.type) ) {
+                    if (sub.status === "enabled" && sub.transport.callback === callbackUrl+"/notification" && sub.transport.method === "webhook" && ActiveSubscriptions.hasOwnProperty(sub.type)) {
                         ActiveSubscriptions[sub.type] = sub.id;
                         console.log(`${sub.type} EventSub ID: ${ActiveSubscriptions[sub.type]}`);
                     }
                     // end any subscriptions for this service that aren't enabled, aren't in requested types, or is a duplicate of an existing sub
-                    else if(sub.transport.callback === callbackUrl+"/notification" && sub.transport.method === "webhook" && 
+                    else if(sub.transport.callback === callbackUrl+"/notification" && sub.transport.method === "webhook" &&
                         (sub.status !== "enabled" || !ActiveSubscriptions.hasOwnProperty(sub.type) || ActiveSubscriptions[sub.type] !== "")) {
                         console.log(`attempting to stop ${sub.type}, ID: ${sub.id}`)
                         endEventSubSubscription(sub.id);
@@ -51,14 +51,13 @@ exports.getEventSubSubscriptions = () => {
                 });
 
                 // Initialize any subscriptions that didn't have existing sub
-                for(var subType in ActiveSubscriptions) {
-                    if( ActiveSubscriptions[subType] === "" ){
+                for (var subType in ActiveSubscriptions) {
+                    if (ActiveSubscriptions[subType] === "") {
                         console.log(`attempting to start ${subType} sub`)
                         module.exports.initializeRedeemSubscription(subType);
                     }
                 }
-            }
-            else{
+            } else {
                 console.log("FAILED TO INITIALIZE EVENTSUB SUBSCRIPTIONS")
             }
         });
@@ -93,10 +92,9 @@ exports.initializeRedeemSubscription = (subType) => {
         }
     }
     // condition object changes a tiny bit for raid sub request
-    if (subType === "channel.raid"){
+    if (subType === "channel.raid") {
         redeemListenerBody["condition"] = {"to_broadcaster_user_id": process.env.BROADCASTER_ID}
-    }
-    else{
+    } else {
         redeemListenerBody["condition"] = {"broadcaster_user_id": process.env.BROADCASTER_ID}
     }
 
@@ -104,19 +102,17 @@ exports.initializeRedeemSubscription = (subType) => {
     var responseData = "";
     var redeemListenerReq = https.request(redeemListenerParams, (result) => {
         result.setEncoding('utf8');
-        result.on('data', function(d) {
+        result.on('data', function (d) {
                 responseData = responseData + d;
             })
-            .on('end', function(result) {
+            .on('end', function (result) {
                 var responseBody = JSON.parse(responseData);
-                if ( responseBody.hasOwnProperty('data') && responseBody.data.length === 1 ){
+                if (responseBody.hasOwnProperty('data') && responseBody.data.length === 1) {
                     ActiveSubscriptions[subType] = responseBody.data[0].id;
                     console.log(`Initialized ${subType}, EventSub ID: ${ActiveSubscriptions[subType]}`);
-                }
-                else if ( responseBody.hasOwnProperty('error') ) {
+                } else if (responseBody.hasOwnProperty('error')) {
                     console.error(`Error Initializing Redeem Sub`,`${responseBody.error}: ${responseBody.message}`);
-                }
-                else {
+                } else {
                     consolee.error(`Error Initializing Redeem Sub, Unable to Parse Response`,responseBody)
                 }
             });
@@ -141,10 +137,10 @@ function endEventSubSubscription(subId) {
     var responseData = "";
     var listRequest = https.request(stopSubscriptionParams, (result) => {
         result.setEncoding('utf8');
-        result.on('data', function(d) {
+        result.on('data', function (d) {
             responseData = responseData + d;
         })
-        .on('end', function(result) {
+        .on('end', function (result) {
             console.log(`Sub ${subId} Stopped`)
         });
     });

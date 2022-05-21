@@ -12,37 +12,37 @@ exports.addXp = (eventType,eventBody) => {
     let pointType = "";
     console.log(`${eventType} event detected`)
 
-    if(eventType == "channel.follow"){
+    if (eventType == "channel.follow") {
         console.log("follow event detected")
         pointVal = 200
         pointType = "follow"
     }
-    if(eventType == "channel.subscribe" && eventBody.is_gift == "false"){
+    if (eventType == "channel.subscribe" && eventBody.is_gift == "false") {
         pointVal = eventBody.tier
         pointType = "sub"
     }
-    if(eventType == "channel.subscription.gift"){
+    if (eventType == "channel.subscription.gift") {
         pointVal = eventBody.total * eventBody.tier
         pointType = "sub"
     }
-    if(eventType == "channel.subscription.message"){
+    if (eventType == "channel.subscription.message") {
         pointVal = eventBody.tier
         pointType = "sub"
     }
-    if(eventType == "channel.cheer"){
+    if (eventType == "channel.cheer") {
         pointVal = eventBody.bits
         pointType = "bits"
     }
-    if(eventType == "channel.raid"){
+    if (eventType == "channel.raid") {
         pointVal = eventBody.viewers * 100
         pointType = "raid"
         console.log(`raid detected, points ${pointVal}`)
     }
-    if(eventType == "channel.hype_train.end"){
+    if (eventType == "channel.hype_train.end") {
         pointVal = eventBody.level * 2000
         pointType = "hypeTrain"
     }
-    if(eventType == "channel.channel_points_custom_reward_redemption.add"){
+    if (eventType == "channel.channel_points_custom_reward_redemption.add") {
         // works out to 500 pt redeem about 220 xp and 6k pt redeem about 770 xp
         pointVal = Math.floor(Math.sqrt(eventBody.reward.cost)) * 10
         pointType = "redeem"
@@ -55,13 +55,13 @@ exports.addXp = (eventType,eventBody) => {
 exports.streamOnline = () => {
     var db = mongoHandler.getDb()
     const date = new Date()
-    
+
     // find most recent stream log
     query = {"discordServer": process.env.DISCORD_SERVER_ID}
     db.collection("ahogeLog").find(query).limit(1).sort({"$natural": -1}).toArray(function(err,document){
         if (err) throw err
 
-        if( document.length < 1 || (document["dateEnded"] && document["dateEnded"])){
+        if (document.length < 1 || (document["dateEnded"] && document["dateEnded"])) {
             createNew = true
         }
         else{
@@ -77,11 +77,11 @@ exports.streamOffline = () => {
 
     var filter = {"discordServer": process.env.DISCORD_SERVER_ID, "dateEnded": {"$exists":false}}
     var update = {"dateEnded": date.toString()}
-    db.collection("ahogeLog").findOneAndUpdate(filter, update, function(err, document){
+    db.collection("ahogeLog").findOneAndUpdate(filter, update, function (err, document) {
         if (err) throw err;
     })
 }
 
-function resetXp(){
+function resetXp() {
 
 }
