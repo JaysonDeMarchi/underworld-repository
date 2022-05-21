@@ -29,7 +29,7 @@ var refreshOAuth = function () {
                 'Content-Type': 'application/x-www-form-urlencoded'
             }
         };
-    
+
         var refreshRequestBody = {
             "grant_type": "refresh_token",
             "refresh_token": currentRefreshToken,
@@ -46,7 +46,7 @@ var refreshOAuth = function () {
             .on('end', function(result) {
                 var responseBody = JSON.parse(responseData);
                 console.log(responseBody);
-                if (responseBody.hasOwnProperty("access_token") && responseBody.hasOwnProperty("refresh_token")){
+                if (responseBody.hasOwnProperty("access_token") && responseBody.hasOwnProperty("refresh_token")) {
                     // log success
                     const date = new Date().toISOString().slice(0,19)
                     console.log(`${date} Client Credentials Refreshed`)

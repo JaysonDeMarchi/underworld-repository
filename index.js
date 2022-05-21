@@ -8,8 +8,8 @@ const https = require('https');
 // redirect console output to log files
 const fs = require("fs")
 const path = require("path");
-let logConsoleStream = fs.createWriteStream('./logs/console.log',{flags: 'a'});
-let logErrorStream = fs.createWriteStream('./logs/error.log',{flags: 'a'});
+let logConsoleStream = fs.createWriteStream('./logs/console.log', {flags: 'a'});
+let logErrorStream = fs.createWriteStream('./logs/error.log', {flags: 'a'});
 process.stdout.write = logConsoleStream.write.bind(logConsoleStream)
 process.stderr.write = logErrorStream.write.bind(logErrorStream)
 process.on('uncaughtException', function (ex) {
@@ -23,7 +23,7 @@ const express = require("express");
 var mongoHandler = require('./helpers/mongoHandler')
 
 // initial db connection
-mongoHandler.connectToServer( (err,client) => {
+mongoHandler.connectToServer((err, client) => {
     if (err) console.log(err)
 
     // express setup
@@ -40,14 +40,13 @@ mongoHandler.connectToServer( (err,client) => {
         console.log("Your app is listening on port " + listener.address().port);
     })
 
-
     // import more helper classes
     var EventSub = require('./helpers/eventSub')
     var FactionPoints = require('./helpers/factionPoints')
     var AhogeManager = require('./helpers/ahoge')
 
     // initialize faction overview socket
-    const io = require('socket.io')(listener,{
+    const io = require('socket.io')(listener, {
         path: '/socket',
         rejectUnauthorized: 'false'
     })
@@ -66,7 +65,7 @@ mongoHandler.connectToServer( (err,client) => {
     })
 
     // Display active EventSub subscriptions (only in test mode)
-    if ( process.env.TEST_ENV == "true" ) {
+    if (process.env.TEST_ENV == "true") {
     app.get('/listWebhooks', (req, res) => {
         var createWebHookParams = {
             host: "api.twitch.tv",
@@ -74,16 +73,16 @@ mongoHandler.connectToServer( (err,client) => {
             method: 'GET',
             headers: {
                 "Client-ID": process.env.TWITCH_CLIENT_ID,
-                "Authorization": "Bearer "+ process.env.TWITCH_APP_BEARER
+                "Authorization": "Bearer " + process.env.TWITCH_APP_BEARER
             }
         };
         var responseData = "";
         var listRequest = https.request(createWebHookParams, (result) => {
             result.setEncoding('utf8');
-            result.on('data', function(d) {
+            result.on('data', function (d) {
                 responseData = responseData + d;
             })
-            .on('end', function(result) {
+            .on('end', function (result) {
                 var responseBody = JSON.parse(responseData);
                 res.send(responseBody);
             });
@@ -136,25 +135,24 @@ mongoHandler.connectToServer( (err,client) => {
         if (messageType === "webhook_callback_verification") {
             console.log("Verifying Webhook");
             return res.status(200).send(req.body.challenge);
-        }
-        else{
+        } else {
             res.status(200).end();
         }
 
         const { type } = req.body.subscription;
         const { event } = req.body;
-        
-        if ( req.header("Twitch-Eventsub-Message-Type") === "notification" ) {
+
+        if (req.header("Twitch-Eventsub-Message-Type") === "notification") {
             // log event if in debug mode
-            if( process.env.DEBUG == "true" ) { console.log(type);console.log(event); }
+            if (process.env.DEBUG == "true") { console.log(type);console.log(event); }
 
             // make sure this event has not been received already
-            if ( !recentNotifIds.has(event.id) ) {
+            if (!recentNotifIds.has(event.id)) {
                 // add event id to recents notif list
                 recentNotifIds.add(event.id);
 
                 // there's some kinda iffy race condition fucky wucky goin on in here
-                if (type != "stream.online" && type != "stream.offline" && type != "channel.channel_points_custom_reward_redemption.add"){
+                if (type != "stream.online" && type != "stream.offline" && type != "channel.channel_points_custom_reward_redemption.add") {
                     AhogeManager.addXp(type,event)
                 }
                 // parse out the title of the redeem
@@ -174,14 +172,14 @@ mongoHandler.connectToServer( (err,client) => {
             recentNotifIds.clear();
             EventSub.initializeRedeemSubscription(req.body.type);
         }
-        else{
+        else {
             console.log(`Message type ${req.header("Twitch-Eventsub-Message-Type")} not recognized as command.`)
             console.log(req)
         }
     });
 
     // START EVENTSUB SUBSCRIPTION FOR CHANNEL REDEEMS
-    if (process.env.LISTEN_EVENTS == "true"){
+    if (process.env.LISTEN_EVENTS == "true") {
         EventSub.getEventSubSubscriptions();
     }
 
@@ -200,7 +198,7 @@ mongoHandler.connectToServer( (err,client) => {
         var ip = socket.request.connection.remoteAddress;
         clients[id] = {socket:socket, ip:ip}
 
-        clients[id].socket.emit('connection',null);
+        clients[id].socket.emit('connection', null);
 
         clients[id].socket.on('disconnect', () => {
             delete clients[id];
@@ -216,7 +214,7 @@ mongoHandler.connectToServer( (err,client) => {
             if (err)
                 throw err;
 
-            for (const faction of result){
+            for (const faction of result) {
                 clients[id].socket.emit('update',{faction: faction["faction"], total: faction["total"]})
             }
         });

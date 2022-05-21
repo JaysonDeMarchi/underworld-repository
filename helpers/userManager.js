@@ -5,8 +5,8 @@ require("dotenv").config()
 var mongoHandler = require('./mongoHandler')
 
 module.exports = {
-    updateUserPoints: function(pointValue,pointDirection,twitchId,twitchUsername) {
-        return new Promise(function(resolve,reject){
+    updateUserPoints: function(pointValue, pointDirection, twitchId, twitchUsername) {
+        return new Promise(function (resolve, reject) {
             var db = mongoHandler.getDb()
 
             // gather user info
@@ -21,20 +21,18 @@ module.exports = {
 
                 // if no user found to update, add it to the table
                 if (documents["lastErrorObject"]["n"] == 0) {
-                    if( pointDirection === "add" ){
+                    if (pointDirection === "add") {
                         userObj = {"discordServer":process.env.DISCORD_SERVER_ID,"twitchId":twitchId,"twitchUsername":twitchUsername,"total":pointValue,"positive":pointValue,"negative":0}
-                    }
-                    else{
+                    } else {
                         userObj = {"discordServer":process.env.DISCORD_SERVER_ID,"twitchId":twitchId,"twitchUsername":twitchUsername,"total":pointValue*-1,"positive":0,"negative":pointValue}
                     }
 
-                    db.collection("users").insertOne(userObj, function(err,insDocument){
+                    db.collection("users").insertOne(userObj, function (err, insDocument) {
                         if(err) throw err;
 
                         resolve("document inserted")
                     })
-                }
-                else{
+                } else {
                     resolve("document updated")
                 }
             })
