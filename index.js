@@ -67,10 +67,12 @@ mongoHandler.connectToServer((err, client) => {
 
 		app.get('/auth', async (req, res) => {
 			const url = new URL(req.query.clientUrl);
-			const searchParams = await authenticate(req.query);
+			const authData = await authenticate(req.query);
 
-			Object.entries(searchParams).map(([attribute, value]) => {
-				url.searchParams.set(attribute, value);
+			res.cookie(`${authData.type}-token`, authData.access_token, {
+				httpOnly: true,
+				maxAge: authData.expires_in,
+				sameSite: 'Strict',
 			});
 
 			res.redirect(url);
