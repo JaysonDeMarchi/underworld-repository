@@ -4,6 +4,7 @@ require("dotenv").config()
 // import basic requires
 const crypto = require("crypto");
 const https = require('https');
+const authenticate = require('./model/authenticate');
 
 // redirect console output to log files
 const fs = require("fs")
@@ -63,6 +64,17 @@ mongoHandler.connectToServer((err, client) => {
     app.get("/snocket", (req, res) => {
         res.send("This is where Nexilitus goes genera421Oops")
     })
+
+		app.get('/auth', async (req, res) => {
+			const url = new URL(req.query.clientUrl);
+			const searchParams = await authenticate(req.query);
+
+			Object.entries(searchParams).map(([attribute, value]) => {
+				url.searchParams.set(attribute, value);
+			});
+
+			res.redirect(url);
+		});
 
     // Display active EventSub subscriptions (only in test mode)
     if (process.env.TEST_ENV == "true") {
