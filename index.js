@@ -1,5 +1,5 @@
 // load environment variables
-require("dotenv").config()
+require("dotenv").config();
 
 // import basic requires
 const crypto = require("crypto");
@@ -7,21 +7,21 @@ const https = require('https');
 const authenticate = require('./model/authenticate');
 
 // redirect console output to log files
-const fs = require("fs")
+const fs = require("fs");
 const path = require("path");
 let logConsoleStream = fs.createWriteStream('./logs/console.log', { flags: 'a' });
 let logErrorStream = fs.createWriteStream('./logs/error.log', { flags: 'a' });
-process.stdout.write = logConsoleStream.write.bind(logConsoleStream)
-process.stderr.write = logErrorStream.write.bind(logErrorStream)
+process.stdout.write = logConsoleStream.write.bind(logConsoleStream);
+process.stderr.write = logErrorStream.write.bind(logErrorStream);
 process.on('uncaughtException', function (ex) {
-	console.error(ex)
+	console.error(ex);
 });
 
 // server listener
 const express = require("express");
 
 // db access lib
-var mongoHandler = require('./helpers/mongoHandler')
+var mongoHandler = require('./helpers/mongoHandler');
 
 // initial db connection
 mongoHandler.connectToServer((err, client) => {
@@ -32,25 +32,25 @@ mongoHandler.connectToServer((err, client) => {
 	var http = require('http').createServer(app);
 
 	// variables needed for twitch calls
-	const callbackUrl = process.env.CALLBACK_URL
-	const port = process.env.PORT || 6336
-	const twitchSigningSecret = process.env.TWITCH_SIGNING_SECRET
+	const callbackUrl = process.env.CALLBACK_URL;
+	const port = process.env.PORT || 6336;
+	const twitchSigningSecret = process.env.TWITCH_SIGNING_SECRET;
 
 	// start listening for gets/posts
 	const listener = app.listen(port, () => {
 		console.log("Your app is listening on port " + listener.address().port);
-	})
+	});
 
 	// import more helper classes
-	var EventSub = require('./helpers/eventSub')
-	var FactionPoints = require('./helpers/factionPoints')
-	var AhogeManager = require('./helpers/ahoge')
+	var EventSub = require('./helpers/eventSub');
+	var FactionPoints = require('./helpers/factionPoints');
+	var AhogeManager = require('./helpers/ahoge');
 
 	// initialize faction overview socket
 	const io = require('socket.io')(listener, {
 		path: '/socket',
 		rejectUnauthorized: 'false'
-	})
+	});
 
 	// holds recent EventSub event IDs to prevent consuming duplicates
 	let recentNotifIds = new Set();
@@ -62,8 +62,8 @@ mongoHandler.connectToServer((err, client) => {
 
 	// easter egg :3
 	app.get("/snocket", (req, res) => {
-		res.send("This is where Nexilitus goes genera421Oops")
-	})
+		res.send("This is where Nexilitus goes genera421Oops");
+	});
 
 	app.get('/auth', async (req, res) => {
 		const url = new URL(req.query.clientUrl);
@@ -102,7 +102,7 @@ mongoHandler.connectToServer((err, client) => {
 					});
 			});
 			listRequest.on('error', (e) => { console.log("Error") });
-			listRequest.end()
+			listRequest.end();
 		});
 	}
 
@@ -167,28 +167,28 @@ mongoHandler.connectToServer((err, client) => {
 
 				// there's some kinda iffy race condition fucky wucky goin on in here
 				if (type != "stream.online" && type != "stream.offline" && type != "channel.channel_points_custom_reward_redemption.add") {
-					AhogeManager.addXp(type, event)
+					AhogeManager.addXp(type, event);
 				}
 				// parse out the title of the redeem
 				else if (type === "channel.channel_points_custom_reward_redemption.add") {
 					FactionPoints.parseFactionPoints(event);
 				}
 				else if (type == "stream.online") {
-					AhogeManager.streamOnline()
+					AhogeManager.streamOnline();
 				}
 				else if (type == "stream.offline") {
-					AhogeManager.streamOffline()
+					AhogeManager.streamOffline();
 				}
 			}
 		}
 		else if (req.header("Twitch-Eventsub-Message-Type") === "revocation") {
-			console.log("EventSub Subscription Revoked")
+			console.log("EventSub Subscription Revoked");
 			recentNotifIds.clear();
 			EventSub.initializeRedeemSubscription(req.body.type);
 		}
 		else {
-			console.log(`Message type ${req.header("Twitch-Eventsub-Message-Type")} not recognized as command.`)
-			console.log(req)
+			console.log(`Message type ${req.header("Twitch-Eventsub-Message-Type")} not recognized as command.`);
+			console.log(req);
 		}
 	});
 
@@ -203,8 +203,8 @@ mongoHandler.connectToServer((err, client) => {
 	var clients = {};
 
 	// load the table that holds points
-	var db = mongoHandler.getDb()
-	const collection = db.collection('sprints')
+	var db = mongoHandler.getDb();
+	const collection = db.collection('sprints');
 
 	// handle new socket connections
 	io.on('connection', (socket) => {
@@ -219,7 +219,7 @@ mongoHandler.connectToServer((err, client) => {
 		});
 
 		clients[id].socket.on('connect_error', () => {
-			console.log(`Connection error detected from socket ${id} at IP: ${ip}`)
+			console.log(`Connection error detected from socket ${id} at IP: ${ip}`);
 		});
 
 		// initialize faction values for new sockets
@@ -229,20 +229,20 @@ mongoHandler.connectToServer((err, client) => {
 				throw err;
 
 			for (const faction of result) {
-				clients[id].socket.emit('update', { faction: faction["faction"], total: faction["total"] })
+				clients[id].socket.emit('update', { faction: faction["faction"], total: faction["total"] });
 			}
 		});
 	});
 
 	// create change stream to emit point updates to all sockets
-	const pipeLine = [{ $match: { 'fullDocument.discordServer': process.env.DISCORD_SERVER_ID } }]
+	const pipeLine = [{ $match: { 'fullDocument.discordServer': process.env.DISCORD_SERVER_ID } }];
 	const changeStream = collection.watch(pipeLine, { fullDocument: 'updateLookup' });
 	changeStream.on('change', next => {
-		io.emit('update', { faction: next.fullDocument.faction, total: next.fullDocument.total })
-	})
+		io.emit('update', { faction: next.fullDocument.faction, total: next.fullDocument.total });
+	});
 
-	app.use(express.static(path.join(__dirname, 'factionLiveView/build')))
+	app.use(express.static(path.join(__dirname, 'factionLiveView/build')));
 	app.get('/factionOverview', function (req, res) {
-		res.sendFile(path.join(__dirname, 'factionLiveView/build', 'index.html'))
-	})
-})
+		res.sendFile(path.join(__dirname, 'factionLiveView/build', 'index.html'));
+	});
+});
