@@ -1,14 +1,18 @@
 // load environment variables
 require("dotenv").config();
 
-// import basic requires
 const crypto = require("crypto");
+const express = require("express");
+const fs = require("fs");
 const https = require('https');
+const path = require("path");
+const AhogeManager = require('./helpers/ahoge');
+const EventSub = require('./helpers/eventSub');
+const FactionPoints = require('./helpers/factionPoints');
 const authenticate = require('./model/authenticate');
+const mongoHandler = require('./helpers/mongoHandler');
 
 // redirect console output to log files
-const fs = require("fs");
-const path = require("path");
 let logConsoleStream = fs.createWriteStream('./logs/console.log', { flags: 'a' });
 let logErrorStream = fs.createWriteStream('./logs/error.log', { flags: 'a' });
 process.stdout.write = logConsoleStream.write.bind(logConsoleStream);
@@ -16,12 +20,6 @@ process.stderr.write = logErrorStream.write.bind(logErrorStream);
 process.on('uncaughtException', function (ex) {
 	console.error(ex);
 });
-
-// server listener
-const express = require("express");
-
-// db access lib
-var mongoHandler = require('./helpers/mongoHandler');
 
 // initial db connection
 mongoHandler.connectToServer((err, client) => {
@@ -40,11 +38,6 @@ mongoHandler.connectToServer((err, client) => {
 	const listener = app.listen(port, () => {
 		console.log("Your app is listening on port " + listener.address().port);
 	});
-
-	// import more helper classes
-	var EventSub = require('./helpers/eventSub');
-	var FactionPoints = require('./helpers/factionPoints');
-	var AhogeManager = require('./helpers/ahoge');
 
 	// initialize faction overview socket
 	const io = require('socket.io')(listener, {
