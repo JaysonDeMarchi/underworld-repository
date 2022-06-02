@@ -20,7 +20,7 @@ export default function ExpBar({
 }) {
 	const context = integrations[integration];
 	return <>
-      <div className="App">
+      <div className="ExpBar">
         <div className="full-bar">
           <div className="exp-level"><span className="content">{context.level}</span></div>
           <div className="exp-background">
