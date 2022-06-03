@@ -13,8 +13,8 @@ const authenticate = require('./model/authenticate');
 const mongoHandler = require('./helpers/mongoHandler');
 
 // redirect console output to log files
-let logConsoleStream = fs.createWriteStream('./logs/console.log', { flags: 'a' });
-let logErrorStream = fs.createWriteStream('./logs/error.log', { flags: 'a' });
+let logConsoleStream = fs.createWriteStream(__dirname + '/logs/console.log', { flags: 'a' });
+let logErrorStream = fs.createWriteStream(__dirname + '/logs/error.log', { flags: 'a' });
 process.stdout.write = logConsoleStream.write.bind(logConsoleStream);
 process.stderr.write = logErrorStream.write.bind(logErrorStream);
 process.on('uncaughtException', function (ex) {
