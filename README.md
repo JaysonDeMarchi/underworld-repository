@@ -1,29 +1,25 @@
-# README #
+# Underworld Repo
 
-This README would normally document whatever steps are necessary to get your application up and running.
+## version control
 
-### What is this repository for? ###
+### commit message formatting
+```
+{icon/type}({scope}): {title}
 
-* Quick summary
-* Version
-* [Learn Markdown](https://bitbucket.org/tutorials/markdowndemo)
+{body}
 
-### How do I get set up? ###
+{footer}
+```
 
-* Summary of set up
-* Configuration
-* Dependencies
-* Database configuration
-* How to run tests
-* Deployment instructions
-
-### Contribution guidelines ###
-
-* Writing tests
-* Code review
-* Other guidelines
-
-### Who do I talk to? ###
-
-* Repo owner or admin
-* Other community or team contact
+### supported types
+|icon|type|description|
+|---|---|---|
+|👷|build|build system or external dependencies updates|
+|🔁|ci|CICD configuration updates|
+|📝|docs|documentation updates|
+|🗻|feature|functionality updates|
+|🧯|fix|bug fixes|
+|🧱|format|coding styles updates|
+|🧹|refactor|refactor updates|
+|🧪|test|test automation updates|
+|🎨|theme|styling updates|
