@@ -1,0 +1,7 @@
+{
+	"name": "@underworld/repo",
+	"private": true,
+	"workspaces": [
+		"./packages/*"
+	]
+}

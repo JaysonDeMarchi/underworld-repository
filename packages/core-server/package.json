@@ -1,5 +1,5 @@
 {
-  "name": "channel-redeem-parser",
+  "name": "@underworld/core-server",
   "version": "1.0.0",
   "description": "Twitch webhooks implementation to consume channel redeems and update the faction cup",
   "main": "src/index.js",
