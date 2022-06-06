@@ -141,6 +141,7 @@ mongoHandler.connectToServer((err, client) => {
 		// must reply with 200 status/verify before any processing
 		if (messageType === "webhook_callback_verification") {
 			console.log("Verifying Webhook");
+			res.header('content-type', 'text/plain');
 			return res.status(200).send(req.body.challenge);
 		} else {
 			res.status(200).end();
