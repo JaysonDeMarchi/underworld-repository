@@ -18,3 +18,14 @@ services:
       ME_CONFIG_MONGODB_ADMINUSERNAME: root
       ME_CONFIG_MONGODB_ADMINPASSWORD: example
       ME_CONFIG_MONGODB_URL: mongodb://root:example@mongo:27017/
+
+  reverse-proxy:
+    image: underworld/reverse-proxy:latest
+    build: reverse-proxy/
+    extra_hosts:
+      - host.docker.internal:host-gateway
+    ports:
+      - 80:80
+      - 443:443
+    volumes:
+      - ./reverse-proxy/stage/conf.d/:/etc/nginx/conf.d/
