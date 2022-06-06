@@ -18,7 +18,7 @@
 |🔁|ci|CICD configuration updates|
 |📝|docs|documentation updates|
 |🗻|feature|functionality updates|
-|🧯|fix|bug fixes|
+|🩹|fix|bug fixes|
 |🧱|format|coding styles updates|
 |🧹|refactor|refactor updates|
 |🧪|test|test automation updates|
