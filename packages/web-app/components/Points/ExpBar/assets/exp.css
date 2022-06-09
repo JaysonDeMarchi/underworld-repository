@@ -9,7 +9,7 @@
 
 .ExpBar {
   font-family: 'LinBiolinumO';
-  background-color: #000;
+  background-color: transparent;
   overflow:hidden;
   padding:0;
   margin:0;
@@ -36,13 +36,13 @@
   top:5vw;
   left:5vw;
   color:#fff;
-  background-image: radial-gradient(circle at 100% 100%, transparent 0px, #ffffff 0px, #ffffff 1px, transparent 1px), 
-  linear-gradient(to right, #ffffffff, #ffffffff), 
-  radial-gradient(circle at 0% 100%, transparent 0px, #ffffff 0px, #ffffff00 1px, transparent 1px), 
-  linear-gradient(to bottom, #ffffffff, #ffffffff), 
-  radial-gradient(circle at 0% 0%, transparent 0px, #ffffff 0px, #ffffff00 1px, transparent 1px), 
-  linear-gradient(to left, #ffffffaa, #ffffff00), 
-  radial-gradient(circle at 100% 0%, transparent 0px, #ffffff 0px, #ffffff00 1px, transparent 1px), 
+  background-image: radial-gradient(circle at 100% 100%, transparent 0px, #ffffff 0px, #ffffff 1px, transparent 1px),
+  linear-gradient(to right, #ffffffff, #ffffffff),
+  radial-gradient(circle at 0% 100%, transparent 0px, #ffffff 0px, #ffffff00 1px, transparent 1px),
+  linear-gradient(to bottom, #ffffffff, #ffffffff),
+  radial-gradient(circle at 0% 0%, transparent 0px, #ffffff 0px, #ffffff00 1px, transparent 1px),
+  linear-gradient(to left, #ffffffaa, #ffffff00),
+  radial-gradient(circle at 100% 0%, transparent 0px, #ffffff 0px, #ffffff00 1px, transparent 1px),
   linear-gradient(to top, #ffffff00, #ffffffaa);
   background-size: 1px 1px, calc(100% - 2px) 1px, 1px 1px, 1px calc(100% - 2px);
   background-position: top left,top center,top right,center right, bottom right,bottom center,bottom left,center left;
