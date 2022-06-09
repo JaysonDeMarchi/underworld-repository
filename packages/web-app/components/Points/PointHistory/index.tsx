@@ -2,34 +2,24 @@
 import React from 'react';
 import './assets/pointhistory.css';
 
-const integrations = {
-	Creatures: {
-    id: "Creatures",
-    value: "+10",
-    source: 'Dailies',
-		userName: 'ReallyLongUsername'
-	},
-	Undead: {
-    id: "Undead",
-    value: "+10",
-    source: 'Dailies',
-		userName: 'ReallyLongUsername'
-	},
-	Monsters: {
-    id: "Monsters",
-    value: "+10",
-    source: 'Dailies',
-		userName: 'ReallyLongUsername'
-	},
-};
-
 export default function PointHistory({
-	integration,
+	faction,
+	value,
+	direction,
+	source,
+	username
 }) {
-	const context = integrations[integration];
+	var indicator = "+"
+	if(!direction){
+		indicator = "-"
+	}
 	return <>
 		<div className="PointHistory">
-			<div className="pointCapsule"><div className={"pointFaction " + (context.id).toLowerCase()}>{context.id} {context.value}</div><div className="pointType">{context.source}</div><div className="pointUser">{context.userName}</div></div>
+			<div className="pointCapsule">
+				<div className={"pointFaction " + faction.toLowerCase()}>{faction} {indicator + value}</div>
+				<div className="pointType">{source}</div>
+				<div className="pointUser">{username}</div>
+			</div>
 		</div>
 	</>;
 }
