@@ -8,16 +8,10 @@ const config = {
 
 const Template = (args) => <ExpBar {...args} />;
 
-export const Empty = Template.bind({});
-Empty.args = {
-	integration: 'Empty',
+export const ShowBar = Template.bind({});
+ShowBar.args = {
+	level: 0,
 	width: 0
-};
-
-export const Full = Template.bind({});
-Full.args = {
-	integration: 'Full',
-	width: 100
 };
 
 export default config;
