@@ -1,6 +1,5 @@
 import React from 'react'
-import { ThemeProvider } from 'theme-ui'
-import theme from '../theme'
+import Theme from '../themes/default-theme'
 
 export const parameters = {
   actions: { argTypesRegex: "^on[A-Z].*" },
@@ -14,8 +13,9 @@ export const parameters = {
 
 export const decorators = [
   (Story, context) => (
-    <ThemeProvider theme={theme}>
-      <Story {...context}/>
-    </ThemeProvider>
+    <Theme
+			Component={Story}
+			props={context}
+		/>
   ),
 ]
