@@ -6,6 +6,11 @@ const theme = {
 		discordBlue: '#5865F2',
 		twitchPurple: '#9146FF',
 	},
+	fonts: {
+		...roboto.fonts,
+		body: `LinBiolinumO, ${roboto.fonts.body}`,
+		heading: `LinBiolinumO, ${roboto.fonts.heading}`,
+	},
 	buttons: {
 		discord: {
 			color: 'white',

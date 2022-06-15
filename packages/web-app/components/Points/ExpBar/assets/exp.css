@@ -1,14 +1,4 @@
-@font-face {
-  font-family: 'LinBiolinumO';
-  src: url('LinBiolinumO.woff2') format('woff2'),
-      url('LinBiolinumO.woff') format('woff');
-  font-weight: normal;
-  font-style: normal;
-  font-display: swap;
-}
-
 .ExpBar {
-  font-family: 'LinBiolinumO';
   background-color: transparent;
   overflow:hidden;
   padding:0;
