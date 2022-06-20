@@ -9,7 +9,6 @@ exports.addUser = (dbo, serverId, userId, nickname, faction, total, positive, ne
         });
     }
     catch(ex){
-
     }
 }
 
@@ -20,6 +19,7 @@ exports.addUserObj = (dbo, userObj) => {
                 throw err;
         });
     }
+
     catch(ex){
         console.error(`ex`)
     }

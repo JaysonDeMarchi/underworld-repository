@@ -10,7 +10,7 @@ module.exports = (dbo, message) => {
         return dbo.collection("users").find(query).sort(sortReq).limit(10).toArray(function(err,result){
             if (err)
                 throw err;
-            
+
             msg = `**Top 10 Users:**\n\``;
             placeCount = 1
             // iterate over users and add to report

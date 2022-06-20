@@ -10,7 +10,7 @@ module.exports = (dbo, message) => {
         return dbo.collection("sprints").find(query).sort(sortReq).toArray(function(err,result){
             if (err)
                 throw err;
-            
+
             msg = `**Faction Cup Overview:**\n\``;
             placeCount = 1
             // iterate over faction points
