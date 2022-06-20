@@ -27,7 +27,7 @@ module.exports = (dbo, message) => {
     if ( !message.content.includes("from") && !message.content.includes("to") ){
         return message.channel.send(`You failed to mention if I am awarding points or tearing them away ${message.author}`);
     }
-    
+
     // Check number of points to give/take
     var pointVal = parseInt(message.cleanContent.match(/\d+/).shift(), 10);
     if ( isNaN(pointVal) ){
@@ -43,7 +43,7 @@ module.exports = (dbo, message) => {
             // Grab the role name that corresponds to a faction
             roleVal = roleCollection.filter(function(role){ return factions.includes(role) });
             targetFaction = roleVal[0]
-        } 
+        }
         else{
             targetFaction = role.name.toLowerCase();
         }
@@ -92,7 +92,7 @@ module.exports = (dbo, message) => {
 
                     // add user
                     userManager.addUser(dbo, discordServerID,member.id,member.displayName,targetFaction,(rmvPts?pointVal*-1:pointVal),(rmvPts?0:pointVal),(rmvPts?pointVal:0))
-                    
+
                     // append user info to msg
                     msg = `${msg} ${member.user} Total:${(rmvPts?pointVal*-1:pointVal)} [${"+"+(rmvPts?0:pointVal)}|${"-"+(rmvPts?pointVal:0)}]`
 
@@ -103,7 +103,7 @@ module.exports = (dbo, message) => {
                             throw err;
                         // final concat to the reply msg
                         msg = `${msg} ${displayFactionName} Total:${factionDocs["value"]["total"]} [${"+"+factionDocs["value"]["positive"]}|${"-"+factionDocs["value"]["negative"]}]`;
-                        
+
                         // send response msg
                         return message.channel.send(msg)
                     });
@@ -111,7 +111,7 @@ module.exports = (dbo, message) => {
                 // user exists and was updated, make point readout/handle faction update
                 else{
                     msg = `${msg} ${member.user} Total:${documents["value"]["total"]} [${"+"+documents["value"]["positive"]}|${"-"+documents["value"]["negative"]}]`;
-            
+
                     // update the member's faction for this sprint
                     var query = {"faction": targetFaction, "discordServer": discordServerID, "sprintEnd":{"$exists":false}}
                     return dbo.collection("sprints").findOneAndUpdate(query, updateVal, { "returnOriginal": false }, function (err, documents) {
@@ -119,7 +119,7 @@ module.exports = (dbo, message) => {
                             throw err;
                         // final concat to the reply msg
                         msg = `${msg} ${displayFactionName} Total:${documents["value"]["total"]} [${"+"+documents["value"]["positive"]}|${"-"+documents["value"]["negative"]}]`;
-                        
+
                         // send response msg
                         return message.channel.send(msg)
                     });
@@ -129,14 +129,14 @@ module.exports = (dbo, message) => {
         else{
             // Update the faction points
             var query = {"faction": targetFaction, "discordServer": discordServerID, "sprintEnd":{"$exists":false}}
-        
+
             // update the factions for this sprint
             return dbo.collection("sprints").findOneAndUpdate(query, updateVal, { "returnOriginal": false }, function (err, documents) {
                 if (err)
                     throw err;
-                
+
                 msg = `${msg} ${displayFactionName} Total:${documents["value"]["total"]} [${"+"+documents["value"]["positive"]}|${"-"+documents["value"]["negative"]}]`;
-                
+
                 return message.channel.send(msg)
             });
         }

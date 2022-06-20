@@ -12,7 +12,7 @@ module.exports = (dbo, message) => {
         return dbo.collection("sprints").find(query).sort(sortReq).toArray(function(err,result){
             if (err)
                 throw err;
-            
+
             msg = `**Faction Cup Overview:**\n\``;
             placeCount = 1
             // iterate over faction points
@@ -31,7 +31,7 @@ module.exports = (dbo, message) => {
             return dbo.collection("users").find(query).sort(sortReq).limit(10).toArray(function(err,result){
                 if (err)
                     throw err;
-                
+
                 msg = `**Top 10 Users:**\n\``;
                 placeCount = 1
                 // iterate over users and add to report
@@ -56,15 +56,15 @@ module.exports = (dbo, message) => {
                         // iterate through factions in the template table
                         var insertVals = [];
                         for(const faction of result){
-                            // for 
+                            // for
                             var factionObj = {"discordServer": discordServerID,"faction":faction["name"],"total":0,"positive":0,"negative":0}
                             insertVals.push(factionObj)
                         }
-                        
+
                         // Insert the faction template as a new sprint
                         return dbo.collection("sprints").insertMany(insertVals,function(err,documents){
                             if (err) throw err;
-                            
+
                             // set all users back to 0 points
                             query = {"discordServer": discordServerID,}
                             updateVal = {"$set":{"total":0,"positive":0,"negative":0}}

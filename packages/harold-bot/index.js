@@ -14,6 +14,7 @@ process.stderr.write = logErrorStream.write.bind(logErrorStream)
 process.on('uncaughtException', function (ex) {
     console.error(ex)
 });
+
 MongoClient.connect(process.env.CONN_STRING, function(err, db){
     if (err) throw err;
     var dbo = db.db("master");
