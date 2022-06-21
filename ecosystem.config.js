@@ -1,9 +1,9 @@
 module.exports = {
   apps : [
-		{
-			name: 'core-server',
-			script: './packages/core-server/src/index.js',
-			cron_restart: '27 15 * * *',
-		},
-	],
+    {
+      name: 'HaroldBot-staging',
+      script: './packages/harold-bot/index.js',
+      cron_restart: '27 15 * * *',
+    },
+  ],
 };
