@@ -7,6 +7,7 @@ const pointscheck = require("../commands/pointscheck")
 const mcmanager = require("../commands/mcmanager")
 
 module.exports = (client, dbo, message) => {
+	try {
     if(message.content.toLowerCase().split(" ")[0] === "!restart"){
         if(message.member.roles.cache.find(role => ["General","Colonel"].includes(role.name))){
             return restart(dbo, message)
@@ -40,4 +41,8 @@ module.exports = (client, dbo, message) => {
             return mcmanager.updateMCWhitelist(dbo, message)
         }
     }
+	} catch (error) {
+		console.error(error);
+		return message.channel.send('CEASE');
+	}
 }
