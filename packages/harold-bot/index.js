@@ -1,7 +1,12 @@
 require("dotenv").config()
-const Discord = require("discord.js")
+const { Client, Intents } = require("discord.js")
 const fs = require("fs")
-const client = new Discord.Client()
+const client = new Client({
+	intents: [
+		Intents.FLAGS.GUILDS,
+		Intents.FLAGS.GUILD_MESSAGES,
+	],
+})
 
 require("dotenv").config()
 var MongoClient = require('mongodb').MongoClient;

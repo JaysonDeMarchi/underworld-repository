@@ -5,13 +5,14 @@
   "main": "index.js",
   "scripts": {
     "start": "node index.js",
-    "dev": "nodemon index.js"
+    "dev": "nodemon index.js",
+    "debug": "nodemon --inspect index.js"
   },
   "keywords": [],
   "author": "Sneaky_Waffles",
   "license": "MIT",
   "dependencies": {
-    "discord.js": "^12.5.1",
+    "discord.js": "^13.8.0",
     "dotenv": "^8.2.0",
     "modern-rcon": "^1.0.3",
     "mongodb": "^3.6.4",
