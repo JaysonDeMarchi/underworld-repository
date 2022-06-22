@@ -1,4 +1,5 @@
 require("dotenv").config()
+const logger = require('../logger');
 
 exports.addUser = (dbo, serverId, userId, nickname, faction, total, positive, negative) => {
     try{
@@ -21,6 +22,6 @@ exports.addUserObj = (dbo, userObj) => {
     }
 
     catch(ex){
-        console.error(`ex`)
+        logger.error(`ex`)
     }
 }

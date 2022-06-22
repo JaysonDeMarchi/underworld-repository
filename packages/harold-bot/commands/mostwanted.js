@@ -1,8 +1,9 @@
 require("dotenv").config()
+const logger = require('../logger');
 
 module.exports = (dbo, message) => {
     const discordServerID = message.guild.id
-    console.log(`mostwanted serverID: ${discordServerID}`)
+    logger.info(`mostwanted serverID: ${discordServerID}`)
     try{
         // query for top 10 user totals (non-deleted discord users with at least point interaction only)
         query = {"discordServer": discordServerID, "discordID": {"$exists":true}, "dateDeleted": {"$exists":false}, "negative":{"$ne":0}}
@@ -24,6 +25,6 @@ module.exports = (dbo, message) => {
         });
     }
     catch(ex){
-        console.error(ex)
+        logger.error(ex)
     }
 }
