@@ -1,9 +1,6 @@
 const mcmanager = require("../commands/mcmanager")
 const logger = require('../logger');
 
-const Rcon = require('modern-rcon');
-const rcon = new Rcon(host=process.env.MINECRAFT_HOST, port=process.env.MINECRAFT_PORT, password=process.env.MINECRAFT_PASSWORD);
-
 module.exports = (client, dbo, oldMember, newMember) => {
     // find if old/new member has eligible roles for mc
     var hasOldSub = oldMember.roles.cache.find(role => ["Twitch Subscriber","Twitch Subscriber: Tier 1","Twitch Subscriber: Tier 2","Twitch Subscriber: Tier 3","Knight"].includes(role.name))
