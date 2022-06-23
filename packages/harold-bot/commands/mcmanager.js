@@ -3,7 +3,7 @@ const usermanager = require("./userManager")
 const logger = require('../logger');
 
 const Rcon = require('modern-rcon');
-const rcon = new Rcon(host=process.env.MINECRAFT_HOST, port=process.env.MINECRAFT_PORT, password=process.env.MINECRAFT_PASSWORD);
+const rcon = new Rcon(host=process.env.MINECRAFT_HOST, port=parseInt(process.env.MINECRAFT_PORT), password=process.env.MINECRAFT_PASSWORD);
 
 const factions = ["undead","creatures","monsters"];
 
