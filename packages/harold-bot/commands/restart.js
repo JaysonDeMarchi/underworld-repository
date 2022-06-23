@@ -1,4 +1,5 @@
 require("dotenv").config()
+const logger = require('../logger');
 
 const factions = ["undead","creatures","monsters"];
 
@@ -78,6 +79,6 @@ module.exports = (dbo, message) => {
         });
     }
     catch(ex){
-        console.error(ex)
+        logger.error(ex)
     }
 }

@@ -1,5 +1,6 @@
 require("dotenv").config()
 const usermanager = require("./userManager")
+const logger = require('../logger');
 
 const Rcon = require('modern-rcon');
 const rcon = new Rcon(host=process.env.MINECRAFT_HOST, port=process.env.MINECRAFT_PORT, password=process.env.MINECRAFT_PASSWORD);
@@ -22,7 +23,7 @@ const updateMCWhitelist = (dbo, message) => {
 
     mcUsername = message.content.split(' ')[1]
 
-    console.log(`attempted whitelist command ${nickname},${faction},${mcUsername}`)
+    logger.info(`attempted whitelist command ${nickname},${faction},${mcUsername}`)
 
     try{
         // check if requested username is already taken by another user in the server
@@ -30,7 +31,7 @@ const updateMCWhitelist = (dbo, message) => {
         return dbo.collection("users").findOne(query, (err, document) => {
             if (err) throw err;
             if (document) {
-                console.log(`Discord user ${nickname} (${userId}) attempted to whitelist minecraft username ${mcUsername}, but it is already in use by ${document.nickname} (${document.discordID})`);
+                logger.info(`Discord user ${nickname} (${userId}) attempted to whitelist minecraft username ${mcUsername}, but it is already in use by ${document.nickname} (${document.discordID})`);
                 return message.channel.send(`${mcUsername} is already in use`)
             }
 
@@ -43,7 +44,7 @@ const updateMCWhitelist = (dbo, message) => {
                 if (document && document.mcUsername){
                     // un-whitelist old username, add new name
                     return rconUpdateWhitelist(mcUsername,document.mcUsername).then(res => {
-                        console.log(`update cmd response: ${res}`)
+                        logger.info(`update cmd response: ${res}`)
                         // if success resp, update db and send message
                         if(res == `${mcUsername} is now whitelisted`){
                             // update document
@@ -64,7 +65,7 @@ const updateMCWhitelist = (dbo, message) => {
                 else if (document){
                     // whitelist new username
                     return rconUpdateWhitelist(mcUsername,'').then(res => {
-                        console.log(`update cmd response: ${res}`)
+                        logger.info(`update cmd response: ${res}`)
                         // if success resp, update db and send message
                         if(res == `${mcUsername} is now whitelisted`){
                             // update document
@@ -85,7 +86,7 @@ const updateMCWhitelist = (dbo, message) => {
                 else{
                     // whitelist new username
                     return rconUpdateWhitelist(mcUsername,'').then(res => {
-                        console.log(`update cmd response: ${res}`)
+                        logger.info(`update cmd response: ${res}`)
                         // if success resp, create new document for member with username, and send resp message
                         if(res == `${mcUsername} is now whitelisted`){
                             userObj = {"discordServer": discordServerId,"discordID":userId,"nickname":nickname,"faction":faction,"total":0,"positive":0,"negative":0,"mcUsername":mcUsername};
@@ -99,7 +100,7 @@ const updateMCWhitelist = (dbo, message) => {
         });
     }
     catch(ex){
-        console.error(ex)
+        logger.error(ex)
     }
 }
 
@@ -116,7 +117,7 @@ const rconUpdateWhitelist = (addUser,removeUser) => {
             return 1
         }
     }).then(res => {
-        console.log(`rcon add response: ${res}`)
+        logger.info(`rcon add response: ${res}`)
 
         // if invalid username, set msg and return
         if(res == 'That player does not exist'){
@@ -128,7 +129,7 @@ const rconUpdateWhitelist = (addUser,removeUser) => {
             msg = `${addUser} is now whitelisted`
             // send cmd to remove old username if it is needed
             if(removeUser != ''){
-                return rcon.send(`whitelist remove ${removeUser}`).then(res => { console.log(`rcon remove response: ${res}`)})
+                return rcon.send(`whitelist remove ${removeUser}`).then(res => { logger.info(`rcon remove response: ${res}`)})
             }
             else{
                 return 1
@@ -141,7 +142,7 @@ const rconUpdateWhitelist = (addUser,removeUser) => {
         return msg
     }).catch(() => {
         // an error occurred, respond with error msg
-        console.error("There was an error issuing rcon commands");
+        logger.error("There was an error issuing rcon commands");
         return `\`There was an error whitelisting ${mcUsername}\``;
     });
 }

@@ -17,6 +17,7 @@
     "modern-rcon": "^1.0.3",
     "mongodb": "^3.6.4",
     "npm": "^8.2.0",
+    "pino": "^8.0.0",
     "rcon": "^1.1.0"
   },
   "devDependencies": {

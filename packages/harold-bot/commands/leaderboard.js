@@ -1,4 +1,5 @@
 require("dotenv").config()
+const logger = require('../logger');
 
 module.exports = (dbo, message) => {
     const discordServerID = message.guild.id
@@ -24,6 +25,6 @@ module.exports = (dbo, message) => {
         });
     }
     catch(ex){
-        console.error(ex)
+        logger.error(ex)
     }
 }

@@ -5,6 +5,7 @@ const mostwanted = require("../commands/mostwanted")
 const restart = require("../commands/restart")
 const pointscheck = require("../commands/pointscheck")
 const mcmanager = require("../commands/mcmanager")
+const logger = require("../logger");
 
 module.exports = (client, dbo, message) => {
 	try {
@@ -42,7 +43,7 @@ module.exports = (client, dbo, message) => {
         }
     }
 	} catch (error) {
-		console.error(error);
+		logger.error(error);
 		return message.channel.send('CEASE');
 	}
 }
