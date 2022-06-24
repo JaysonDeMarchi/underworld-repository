@@ -3,9 +3,11 @@ const usermanager = require("./userManager");
 const logger = require('../logger');
 
 const Rcon = require('modern-rcon');
-const rcon = new Rcon(host=process.env.MINECRAFT_HOST, port=parseInt(process.env.MINECRAFT_PORT), password=process.env.MINECRAFT_PASSWORD);
+const rcon = new Rcon(process.env.MINECRAFT_HOST, parseInt(process.env.MINECRAFT_PORT), process.env.MINECRAFT_PASSWORD);
 
 const factions = ["undead","creatures","monsters"];
+
+let mcUsername = '';
 
 //exports.updateMCWhitelist = (dbo, message) => {
 const updateMCWhitelist = (dbo, message) => {
@@ -16,9 +18,9 @@ const updateMCWhitelist = (dbo, message) => {
 	// get faction role of user
 	var faction = "";
 	// Remove keys from collection so only role names left
-	roleCollection = message.member.roles.cache.map(function (obj) {return obj.name.toLowerCase();});
+	const roleCollection = message.member.roles.cache.map(function (obj) {return obj.name.toLowerCase();});
 	// Grab the role name that corresponds to a faction
-	roleVal = roleCollection.filter(function (role) { return factions.includes(role); });
+	const roleVal = roleCollection.filter(function (role) { return factions.includes(role); });
 	faction = roleVal[0];
 
 	mcUsername = message.content.split(' ')[1];
@@ -27,7 +29,7 @@ const updateMCWhitelist = (dbo, message) => {
 
 	try{
 		// check if requested username is already taken by another user in the server
-		query = {"discordServer": discordServerId, "mcUsername": mcUsername};
+		let query = {"discordServer": discordServerId, "mcUsername": mcUsername};
 		return dbo.collection("users").findOne(query, (err, document) => {
 			if (err) throw err;
 			if (document) {
@@ -48,7 +50,7 @@ const updateMCWhitelist = (dbo, message) => {
 						// if success resp, update db and send message
 						if(res == `${mcUsername} is now whitelisted`) {
 							// update document
-							update = {"$set":{"nickname":nickname,"mcUsername":mcUsername}};
+							let update = {"$set":{"nickname":nickname,"mcUsername":mcUsername}};
 							return dbo.collection("users").findOneAndUpdate(query, update, { "returnNewDocument": false }, (err, documents) => {
 								if (err) throw err;
 
@@ -69,7 +71,7 @@ const updateMCWhitelist = (dbo, message) => {
 						// if success resp, update db and send message
 						if(res == `${mcUsername} is now whitelisted`) {
 							// update document
-							update = {"$set":{"nickname":nickname,"mcUsername":mcUsername}};
+							let update = {"$set":{"nickname":nickname,"mcUsername":mcUsername}};
 							return dbo.collection("users").findOneAndUpdate(query, update, { "returnNewDocument": false }, (err, documents) => {
 								if (err) throw err;
 
@@ -89,7 +91,7 @@ const updateMCWhitelist = (dbo, message) => {
 						logger.info(`update cmd response: ${res}`);
 						// if success resp, create new document for member with username, and send resp message
 						if(res == `${mcUsername} is now whitelisted`) {
-							userObj = {"discordServer": discordServerId,"discordID":userId,"nickname":nickname,"faction":faction,"total":0,"positive":0,"negative":0,"mcUsername":mcUsername};
+							const userObj = {"discordServer": discordServerId,"discordID":userId,"nickname":nickname,"faction":faction,"total":0,"positive":0,"negative":0,"mcUsername":mcUsername};
 							usermanager.addUserObj(dbo, userObj);
 						}
 

@@ -3,7 +3,7 @@ const logger = require('../logger');
 
 exports.addUser = (dbo, serverId, userId, nickname, faction, total, positive, negative) => {
 	try{
-		userObj = {"discordServer": serverId,"discordID":userId,"nickname":nickname,"faction":faction,"total":total,"positive":positive,"negative":negative};
+		const userObj = {"discordServer": serverId,"discordID":userId,"nickname":nickname,"faction":faction,"total":total,"positive":positive,"negative":negative};
 		dbo.collection("users").insertOne(userObj, function (err,insDocument) {
 			if(err)
 				throw err;

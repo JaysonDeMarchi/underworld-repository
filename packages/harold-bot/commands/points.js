@@ -37,21 +37,21 @@ module.exports = (dbo, message) => {
 
 	try{
 		var msg = ``;
-		targetFaction = "";
+		let targetFaction = "";
 		if (member) {
 			// Remove keys from collection so only role names left
-			roleCollection = member.roles.cache.map(function (obj) {return obj.name.toLowerCase();});
+			const roleCollection = member.roles.cache.map(function (obj) {return obj.name.toLowerCase();});
 			// Grab the role name that corresponds to a faction
-			roleVal = roleCollection.filter(function (role) { return factions.includes(role); });
+			const roleVal = roleCollection.filter(function (role) { return factions.includes(role); });
 			targetFaction = roleVal[0];
 		}
 		else{
 			targetFaction = role.name.toLowerCase();
 		}
-		displayFactionName = targetFaction.charAt(0).toUpperCase() + targetFaction.slice(1);
+		const displayFactionName = targetFaction.charAt(0).toUpperCase() + targetFaction.slice(1);
 
 		// start the reply message
-		pointDirection = message.content.match(/(to|from)/)[0];
+		const pointDirection = message.content.match(/(to|from)/)[0];
 		if ( pointDirection == "from" ) {
 			msg = `${message.author} deducted ${pointVal} points from`;
 		}
@@ -89,7 +89,7 @@ module.exports = (dbo, message) => {
 				// disocrd user does not exist yet, insert to user collection
 				if (documents["lastErrorObject"]["n"] == 0) {
 					// points taken or awarded bool
-					rmvPts = message.content.includes("from");
+					const rmvPts = message.content.includes("from");
 
 					// add user
 					userManager.addUser(dbo, discordServerID,member.id,member.displayName,targetFaction,(rmvPts?pointVal*-1:pointVal),(rmvPts?0:pointVal),(rmvPts?pointVal:0));

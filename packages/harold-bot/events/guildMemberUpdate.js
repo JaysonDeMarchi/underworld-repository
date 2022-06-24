@@ -18,7 +18,7 @@ module.exports = (client, dbo, oldMember, newMember) => {
 
 function handleSubRemoved(dbo, oldMember, newMember) {
 	// pull user info to start with
-	query = {"discordServer": oldMember.guild.id, "discordID": oldMember.id};
+	const query = {"discordServer": oldMember.guild.id, "discordID": oldMember.id};
 	return dbo.collection("users").findOne(query, (err, document) => {
 		if (err) throw err;
 
@@ -31,7 +31,7 @@ function handleSubRemoved(dbo, oldMember, newMember) {
 
 function handleSubAdded(dbo, oldMember, newMember) {
 	// pull user info to start with
-	query = {"discordServer": newMember.guild.id, "discordID": newMember.id};
+	const query = {"discordServer": newMember.guild.id, "discordID": newMember.id};
 	return dbo.collection("users").findOne(query, (err, document) => {
 		if (err) throw err;
 
