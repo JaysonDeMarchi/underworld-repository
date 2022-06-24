@@ -114,7 +114,7 @@ module.exports = (dbo, message) => {
 					msg = `${msg} ${member.user} Total:${documents["value"]["total"]} [${"+"+documents["value"]["positive"]}|${"-"+documents["value"]["negative"]}]`;
 
 					// update the member's faction for this sprint
-					var query = {"faction": targetFaction, "discordServer": discordServerID, "sprintEnd":{"$exists":false}};
+					query = {"faction": targetFaction, "discordServer": discordServerID, "sprintEnd":{"$exists":false}};
 					return dbo.collection("sprints").findOneAndUpdate(query, updateVal, { "returnOriginal": false }, function (err, documents) {
 						if (err)
 							throw err;
