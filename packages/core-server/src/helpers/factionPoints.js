@@ -1,14 +1,14 @@
 // load environment variables
-require("dotenv").config()
-require('./dbLog')
-require('./userManager')
+require("dotenv").config();
+require('./dbLog');
+require('./userManager');
 // used to manage client credeentials for redeem completion
 //var oauth = require('./oauth');
 
 const https = require('https');
 
 // Client for DB access
-var mongoHandler = require('./mongoHandler')
+var mongoHandler = require('./mongoHandler');
 
 // get tokens from json file
 const fs = require("fs");
@@ -16,72 +16,72 @@ const { tokenLog, pointLog } = require("./dbLog");
 const { updateUserPoints } = require("./userManager");
 var currentAuthToken = "";
 var currentRefreshToken = "";
-const date = new Date().toISOString().slice(0,19)
+const date = new Date().toISOString().slice(0,19);
 
 // last redeem is hydrate and should be removed
 const redeemDict = {
-    "2ff18cda-98f3-4a8c-bbb4-9925a7757c3a": "creatures add 10",
-    "fc470584-9044-4e1a-b9f5-06809f0298fa": "undead add 10",
-    "0396e776-51f4-475c-9667-3efefe689bc9": "monsters add 10",
-    "258b8c49-dabe-4701-ab29-6810a8d61502": "user_input remove 10"
-    ,"2b4eb5c1-6976-44c1-b31a-13918491ff9f": "undead add 5"
-}
+	"2ff18cda-98f3-4a8c-bbb4-9925a7757c3a": "creatures add 10",
+	"fc470584-9044-4e1a-b9f5-06809f0298fa": "undead add 10",
+	"0396e776-51f4-475c-9667-3efefe689bc9": "monsters add 10",
+	"258b8c49-dabe-4701-ab29-6810a8d61502": "user_input remove 10"
+	,"2b4eb5c1-6976-44c1-b31a-13918491ff9f": "undead add 5"
+};
 //"2b4eb5c1-6976-44c1-b31a-13918491ff9f": "undead add 5"} // life advice
 
 exports.parseFactionPoints = (event) => {
-    if (event.reward.id in redeemDict) {
-        const date = new Date().toISOString().slice(0,19)
+	if (event.reward.id in redeemDict) {
+		const date = new Date().toISOString().slice(0,19);
 
-        // get configuration arguments
-        let redeemArgs = redeemDict[event.reward.id].split(" ");
+		// get configuration arguments
+		let redeemArgs = redeemDict[event.reward.id].split(" ");
 
-        // set targeted faction
-        var targetFaction = "";
-        if (redeemArgs[0] == "user_input") {
-            var requestedFaction = event.user_input.toLowerCase();
-            if (requestedFaction.includes("creature")) { targetFaction = "creatures" }
-            else if (requestedFaction.includes("undead")) { targetFaction = "undead" }
-            else if (requestedFaction.includes("monster")) { targetFaction = "monsters" }
-            else{
-                console.log(`${date} ERR: "${event.reward.title}" redeem failed to parse target faction from "${requestedFaction}"`,event);
-            }
-        } else {
-            targetFaction = redeemArgs[0];
-        }
+		// set targeted faction
+		var targetFaction = "";
+		if (redeemArgs[0] == "user_input") {
+			var requestedFaction = event.user_input.toLowerCase();
+			if (requestedFaction.includes("creature")) { targetFaction = "creatures"; }
+			else if (requestedFaction.includes("undead")) { targetFaction = "undead"; }
+			else if (requestedFaction.includes("monster")) { targetFaction = "monsters"; }
+			else{
+				console.log(`${date} ERR: "${event.reward.title}" redeem failed to parse target faction from "${requestedFaction}"`,event);
+			}
+		} else {
+			targetFaction = redeemArgs[0];
+		}
 
-        // set add/remove points and value
-        var pointDirection = redeemArgs[1];
-        var pointValue = parseInt(redeemArgs[2]);
+		// set add/remove points and value
+		var pointDirection = redeemArgs[1];
+		var pointValue = parseInt(redeemArgs[2]);
 
-        // generate update/filter queries
-        var update;
-        if (pointDirection === "add")
-            update = {"$inc":{"total":pointValue,"positive":pointValue}};
-        else
-            update = {"$inc":{"total":pointValue*-1,"negative":pointValue}};
+		// generate update/filter queries
+		var update;
+		if (pointDirection === "add")
+			update = {"$inc":{"total":pointValue,"positive":pointValue}};
+		else
+			update = {"$inc":{"total":pointValue*-1,"negative":pointValue}};
 
-        var filter = {"faction": targetFaction, "discordServer": process.env.DISCORD_SERVER_ID, "sprintEnd":{"$exists":false}}
+		var filter = {"faction": targetFaction, "discordServer": process.env.DISCORD_SERVER_ID, "sprintEnd":{"$exists":false}};
 
-        var dbo = mongoHandler.getDb()
+		var dbo = mongoHandler.getDb();
 
-        return dbo.collection("sprints").findOneAndUpdate(filter,update, {"returnOriginal": false}, function (err, factionDoc) {
-            if (err) throw err;
+		return dbo.collection("sprints").findOneAndUpdate(filter,update, {"returnOriginal": false}, function (err, factionDoc) {
+			if (err) throw err;
 
-            console.log(`${date} ${pointValue} points ${(pointDirection=="add")?"to":"from"} ${targetFaction}. Redeem "${event.reward.title}", User ${event.user_name}`);
+			console.log(`${date} ${pointValue} points ${(pointDirection=="add")?"to":"from"} ${targetFaction}. Redeem "${event.reward.title}", User ${event.user_name}`);
 
-            // Mark Redeem As Completed
-            //console.log("attempting complete reward")
-            //completeRedeem(event.reward.id,event.id)
+			// Mark Redeem As Completed
+			//console.log("attempting complete reward")
+			//completeRedeem(event.reward.id,event.id)
 
-            // update user's points. Only add to total if its points in the positive direction
-            updateUserPoints((pointDirection === "add") ? pointValue : 0, pointDirection, event.user_id, event.user_name).then(() => {
-                // log point event
-                pointLog((pointDirection === "remove") ? pointValue * -1 : pointValue, targetFaction, event.user_id, event.user_name, event.reward.title)
-            })
-            return 1;
-        });
-    }
-}
+			// update user's points. Only add to total if its points in the positive direction
+			updateUserPoints((pointDirection === "add") ? pointValue : 0, pointDirection, event.user_id, event.user_name).then(() => {
+				// log point event
+				pointLog((pointDirection === "remove") ? pointValue * -1 : pointValue, targetFaction, event.user_id, event.user_name, event.reward.title);
+			});
+			return 1;
+		});
+	}
+};
 
 // async function completeRedeem(channelRedemptionId,userRedemptionId,repeatAttempt=false){
 //     // Request headers
