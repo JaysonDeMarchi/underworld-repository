@@ -10,6 +10,7 @@ exports.addUser = (dbo, serverId, userId, nickname, faction, total, positive, ne
 		});
 	}
 	catch(ex) {
+		logger.error(ex);
 	}
 };
 
