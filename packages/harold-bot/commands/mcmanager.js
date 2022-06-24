@@ -51,7 +51,7 @@ const updateMCWhitelist = (dbo, message) => {
 						if(res == `${mcUsername} is now whitelisted`) {
 							// update document
 							let update = {"$set":{"nickname":nickname,"mcUsername":mcUsername}};
-							return dbo.collection("users").findOneAndUpdate(query, update, { "returnNewDocument": false }, (err, documents) => {
+							return dbo.collection("users").findOneAndUpdate(query, update, { "returnNewDocument": false }, (err) => {
 								if (err) throw err;
 
 								return message.channel.send(res);
@@ -72,7 +72,7 @@ const updateMCWhitelist = (dbo, message) => {
 						if(res == `${mcUsername} is now whitelisted`) {
 							// update document
 							let update = {"$set":{"nickname":nickname,"mcUsername":mcUsername}};
-							return dbo.collection("users").findOneAndUpdate(query, update, { "returnNewDocument": false }, (err, documents) => {
+							return dbo.collection("users").findOneAndUpdate(query, update, { "returnNewDocument": false }, (err) => {
 								if (err) throw err;
 
 								return message.channel.send(res);

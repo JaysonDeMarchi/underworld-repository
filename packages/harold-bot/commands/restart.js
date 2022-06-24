@@ -1,8 +1,6 @@
 require("dotenv").config();
 const logger = require('../logger');
 
-const factions = ["undead","creatures","monsters"];
-
 module.exports = (dbo, message) => {
 	const discordServerID = message.guild.id;
 
@@ -48,7 +46,7 @@ module.exports = (dbo, message) => {
 				query = {"sprintEnd":{"$exists":false},"discordServer": discordServerID};
 				var date = new Date();
 				let updateVal = {"$set":{"sprintEnd":`${date.getFullYear()}-${date.getMonth()+1}-${date.getDate()}`}};
-				return dbo.collection("sprints").updateMany(query,updateVal,function (err,document) {
+				return dbo.collection("sprints").updateMany(query,updateVal,function (err) {
 					if (err) throw err;
 
 					return dbo.collection("factionsMasterList").find().toArray(function (err,result) {
@@ -63,13 +61,13 @@ module.exports = (dbo, message) => {
 						}
 
 						// Insert the faction template as a new sprint
-						return dbo.collection("sprints").insertMany(insertVals,function (err,documents) {
+						return dbo.collection("sprints").insertMany(insertVals,function (err) {
 							if (err) throw err;
 
 							// set all users back to 0 points
 							query = {"discordServer": discordServerID,};
 							updateVal = {"$set":{"total":0,"positive":0,"negative":0}};
-							dbo.collection("users").updateMany(query,updateVal,function (err,document) {
+							dbo.collection("users").updateMany(query,updateVal,function (err) {
 								if (err) throw err;
 							});
 						});
