@@ -1,27 +1,27 @@
-require("dotenv").config()
+require("dotenv").config();
 const logger = require('../logger');
 
 exports.addUser = (dbo, serverId, userId, nickname, faction, total, positive, negative) => {
-    try{
-        userObj = {"discordServer": serverId,"discordID":userId,"nickname":nickname,"faction":faction,"total":total,"positive":positive,"negative":negative};
-        dbo.collection("users").insertOne(userObj, function (err,insDocument) {
-            if(err)
-                throw err;
-        });
-    }
-    catch(ex){
-    }
-}
+	try{
+		userObj = {"discordServer": serverId,"discordID":userId,"nickname":nickname,"faction":faction,"total":total,"positive":positive,"negative":negative};
+		dbo.collection("users").insertOne(userObj, function (err,insDocument) {
+			if(err)
+				throw err;
+		});
+	}
+	catch(ex) {
+	}
+};
 
 exports.addUserObj = (dbo, userObj) => {
-    try{
-        dbo.collection("users").insertOne(userObj, function (err,insDocument) {
-            if(err)
-                throw err;
-        });
-    }
+	try{
+		dbo.collection("users").insertOne(userObj, function (err,insDocument) {
+			if(err)
+				throw err;
+		});
+	}
 
-    catch(ex){
-        logger.error(`ex`)
-    }
-}
+	catch(ex) {
+		logger.error(`ex`);
+	}
+};
