@@ -1,4 +1,5 @@
 **/.next/
+**/build/
 **/logs
 .git/
 node_modules/
