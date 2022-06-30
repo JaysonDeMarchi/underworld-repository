@@ -113,7 +113,7 @@ exports.initializeRedeemSubscription = (subType) => {
 				} else if (responseBody.hasOwnProperty('error')) {
 					console.error(`Error Initializing Redeem Sub`,`${responseBody.error}: ${responseBody.message}`);
 				} else {
-					consolee.error(`Error Initializing Redeem Sub, Unable to Parse Response`,responseBody);
+					console.error(`Error Initializing Redeem Sub, Unable to Parse Response`,responseBody);
 				}
 			});
 	});
