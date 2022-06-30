@@ -34,16 +34,16 @@ exports.getEventSubSubscriptions = () => {
 				var responseBody = JSON.parse(responseData);
 
 				// parse subscription list for redeem sub
-				if (responseBody.hasOwnProperty("data")) {
+				if (responseBody.data !== undefined) {
 					responseBody.data.forEach(sub => {
 						// Add as active redeem if good status, for this callback url, and is of requested type
-						if (sub.status === "enabled" && sub.transport.callback === callbackUrl+"/notification" && sub.transport.method === "webhook" && ActiveSubscriptions.hasOwnProperty(sub.type)) {
+						if (sub.status === "enabled" && sub.transport.callback === callbackUrl+"/notification" && sub.transport.method === "webhook" && ActiveSubscriptions[sub.type] !== undefined) {
 							ActiveSubscriptions[sub.type] = sub.id;
 							console.log(`${sub.type} EventSub ID: ${ActiveSubscriptions[sub.type]}`);
 						}
 						// end any subscriptions for this service that aren't enabled, aren't in requested types, or is a duplicate of an existing sub
 						else if(sub.transport.callback === callbackUrl+"/notification" && sub.transport.method === "webhook" &&
-                        (sub.status !== "enabled" || !ActiveSubscriptions.hasOwnProperty(sub.type) || ActiveSubscriptions[sub.type] !== "")) {
+                        (sub.status !== "enabled" || !ActiveSubscriptions[sub.type] !== undefined || ActiveSubscriptions[sub.type] !== "")) {
 							console.log(`attempting to stop ${sub.type}, ID: ${sub.id}`);
 							endEventSubSubscription(sub.id);
 						}
@@ -106,10 +106,10 @@ exports.initializeRedeemSubscription = (subType) => {
 		})
 			.on('end', function () {
 				var responseBody = JSON.parse(responseData);
-				if (responseBody.hasOwnProperty('data') && responseBody.data.length === 1) {
+				if (responseBody.data !== undefined && responseBody.data.length === 1) {
 					ActiveSubscriptions[subType] = responseBody.data[0].id;
 					console.log(`Initialized ${subType}, EventSub ID: ${ActiveSubscriptions[subType]}`);
-				} else if (responseBody.hasOwnProperty('error')) {
+				} else if (responseBody.error !== undefined) {
 					console.error(`Error Initializing Redeem Sub`,`${responseBody.error}: ${responseBody.message}`);
 				} else {
 					console.error(`Error Initializing Redeem Sub, Unable to Parse Response`,responseBody);
