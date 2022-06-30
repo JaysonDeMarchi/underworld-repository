@@ -15,7 +15,7 @@ import React from "react";
 
 const Faction = React.forwardRef(({ name, total, layout }, ref) => (
     <div className={`faction-box-${layout}`} id={name} ref={ref}>
-        <div><img src={`/imgs/${name}.png`} className='faction-img'></img></div>
+        <div><img src={`/imgs/${name}.png`} className='faction-img' alt={`${name} icon`}></img></div>
         <span className='faction-total'>{total}</span>
     </div>
 ));
