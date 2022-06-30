@@ -4,7 +4,7 @@ import React from "react";
 
 //     render() {
 //         return (
-            
+
 //             <div className={`faction-box-${this.props.layout}`} id={this.props.name}>
 //                 <div><img src={`/imgs/${this.props.name}.png`} className='faction-img'></img></div>
 //                 <span className='faction-total'>{this.props.total}</span>
