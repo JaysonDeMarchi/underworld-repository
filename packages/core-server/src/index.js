@@ -217,7 +217,7 @@ mongoHandler.connectToServer((err, client) => {
 		});
 
 		// initialize faction values for new sockets
-		query = { "discordServer": process.env.DISCORD_SERVER_ID, "sprintEnd": { "$exists": false } }
+		const query = { "discordServer": process.env.DISCORD_SERVER_ID, "sprintEnd": { "$exists": false } }
 		collection.find(query).toArray(function (err, result) {
 			if (err)
 				throw err;

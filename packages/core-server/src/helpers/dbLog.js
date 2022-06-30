@@ -9,7 +9,7 @@ exports.pointLog = (pointValue, targetFaction, userId, username, memo) => {
 	var dbo = mongoHandler.getDb();
 
 	// gather user info
-	query = {"discordServer": process.env.DISCORD_SERVER_ID, "twitchId": userId, "dateDeleted": {"$exists": false}};
+	let query = {"discordServer": process.env.DISCORD_SERVER_ID, "twitchId": userId, "dateDeleted": {"$exists": false}};
 	return dbo.collection("users").findOne(query, function (err, document) {
 		if (err) throw err;
 
@@ -47,7 +47,7 @@ exports.tokenLog = (access_token, refresh_token) => {
 
 	// insert new tokens into log
 	const date = new Date().toISOString().slice(0,19);
-	logObj = {"dateCreated": date,"discordServer":process.env.DISCORD_SERVER_ID,"access_token":access_token,"refresh_token":refresh_token};
+	const logObj = {"dateCreated": date,"discordServer":process.env.DISCORD_SERVER_ID,"access_token":access_token,"refresh_token":refresh_token};
 	return dbo.collection("twitchClientTokenLog").insertOne(logObj, function (err, logDoc) {
 		if (err)
 			throw err;
@@ -60,9 +60,9 @@ exports.ahogeLog = (pointValue,pointSource) => {
 	// get connection
 	var dbo = mongoHandler.getDb();
 
-	filter = {"discordServer": process.env.DISCORD_SERVER_ID,"dateEnded":{"$exists":false}};
+	const filter = {"discordServer": process.env.DISCORD_SERVER_ID,"dateEnded":{"$exists":false}};
 
-	logUpdateObj = {"$inc":{"total": parseInt(pointValue)}};
+	const logUpdateObj = {"$inc":{"total": parseInt(pointValue)}};
 	// must be added dynamically to use variable as column name
 	logUpdateObj["$inc"][pointSource] = parseInt(pointValue);
 

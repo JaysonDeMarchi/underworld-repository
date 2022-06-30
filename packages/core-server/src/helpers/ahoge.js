@@ -57,7 +57,7 @@ exports.streamOnline = () => {
 	const date = new Date();
 
 	// find most recent stream log
-	query = {"discordServer": process.env.DISCORD_SERVER_ID};
+	const query = {"discordServer": process.env.DISCORD_SERVER_ID};
 	db.collection("ahogeLog").find(query).limit(1).sort({"$natural": -1}).toArray(function (err,document) {
 		if (err) throw err;
 
