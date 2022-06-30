@@ -23,7 +23,7 @@ process.on('uncaughtException', function (ex) {
 
 // initial db connection
 mongoHandler.connectToServer((err, client) => {
-	if (err) console.log(err)
+	if (err) console.log(err);
 
 	// express setup
 	const app = express();
@@ -94,7 +94,7 @@ mongoHandler.connectToServer((err, client) => {
 						res.send(responseBody);
 					});
 			});
-			listRequest.on('error', (e) => { console.log("Error") });
+			listRequest.on('error', (e) => { console.log("Error"); });
 			listRequest.end();
 		});
 	}
@@ -204,7 +204,7 @@ mongoHandler.connectToServer((err, client) => {
 	io.on('connection', (socket) => {
 		var id = socket.id;
 		var ip = socket.request.connection.remoteAddress;
-		clients[id] = { socket: socket, ip: ip }
+		clients[id] = { socket: socket, ip: ip };
 
 		clients[id].socket.emit('connection', null);
 
@@ -217,7 +217,7 @@ mongoHandler.connectToServer((err, client) => {
 		});
 
 		// initialize faction values for new sockets
-		const query = { "discordServer": process.env.DISCORD_SERVER_ID, "sprintEnd": { "$exists": false } }
+		const query = { "discordServer": process.env.DISCORD_SERVER_ID, "sprintEnd": { "$exists": false } };
 		collection.find(query).toArray(function (err, result) {
 			if (err)
 				throw err;
