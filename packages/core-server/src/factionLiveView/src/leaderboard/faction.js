@@ -1,4 +1,4 @@
-import React, { forwardRef } from "react";
+import React from "react";
 
 // export class Faction extends React.Component {
 
