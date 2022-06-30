@@ -13,7 +13,7 @@ exports.pointLog = (pointValue, targetFaction, userId, username, memo) => {
 	return dbo.collection("users").findOne(query, function (err, document) {
 		if (err) throw err;
 
-		var discordId,discordUsername,userTotal,userPositive,userNegative, factionTotal,factionPositive,factionNegative;
+		var discordId,discordUsername,userTotal,userPositive,userNegative;
 		if (document.discordID !== undefined) {
 			discordId = document["discordID"];
 			discordUsername = document["nickname"];
@@ -33,7 +33,7 @@ exports.pointLog = (pointValue, targetFaction, userId, username, memo) => {
 
 			const date = new Date().toISOString().slice(0,19);
 			var logObj = {"dateCreated": date,"discordServer":process.env.DISCORD_SERVER_ID,"discordId":discordId,"discordName":discordUsername,"twitchId":userId,"twitchName":username,"pointValue":pointValue,"memo":memo,"userTotal":userTotal,"userPositive":userPositive,"userNegative":userNegative,"targetFaction":targetFaction,"targetFactionTotal":factionDoc["total"],"targetFactionPositive":factionDoc["positive"],"targetFactionNegative":factionDoc["negative"]};
-			dbo.collection("pointsLog").insertOne(logObj, function (err, logDoc) {
+			dbo.collection("pointsLog").insertOne(logObj, function (err) {
 				if (err) throw err;
 				return 1;
 			});
@@ -48,7 +48,7 @@ exports.tokenLog = (access_token, refresh_token) => {
 	// insert new tokens into log
 	const date = new Date().toISOString().slice(0,19);
 	const logObj = {"dateCreated": date,"discordServer":process.env.DISCORD_SERVER_ID,"access_token":access_token,"refresh_token":refresh_token};
-	return dbo.collection("twitchClientTokenLog").insertOne(logObj, function (err, logDoc) {
+	return dbo.collection("twitchClientTokenLog").insertOne(logObj, function (err) {
 		if (err)
 			throw err;
 
@@ -66,7 +66,7 @@ exports.ahogeLog = (pointValue,pointSource) => {
 	// must be added dynamically to use variable as column name
 	logUpdateObj["$inc"][pointSource] = parseInt(pointValue);
 
-	return dbo.collection("ahogeLog").findOneAndUpdate(filter, logUpdateObj, {"returnOriginal": false}, function (err, logDoc) {
+	return dbo.collection("ahogeLog").findOneAndUpdate(filter, logUpdateObj, {"returnOriginal": false}, function (err) {
 		if (err) throw err;
 
 		return 1;

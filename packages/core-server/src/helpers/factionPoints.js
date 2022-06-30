@@ -5,18 +5,14 @@ require('./userManager');
 // used to manage client credeentials for redeem completion
 //var oauth = require('./oauth');
 
-const https = require('https');
+require('https');
 
 // Client for DB access
 var mongoHandler = require('./mongoHandler');
 
 // get tokens from json file
-const fs = require("fs");
-const { tokenLog, pointLog } = require("./dbLog");
+const { pointLog } = require("./dbLog");
 const { updateUserPoints } = require("./userManager");
-var currentAuthToken = "";
-var currentRefreshToken = "";
-const date = new Date().toISOString().slice(0,19);
 
 // last redeem is hydrate and should be removed
 const redeemDict = {
@@ -64,7 +60,7 @@ exports.parseFactionPoints = (event) => {
 
 		var dbo = mongoHandler.getDb();
 
-		return dbo.collection("sprints").findOneAndUpdate(filter,update, {"returnOriginal": false}, function (err, factionDoc) {
+		return dbo.collection("sprints").findOneAndUpdate(filter,update, {"returnOriginal": false}, function (err) {
 			if (err) throw err;
 
 			console.log(`${date} ${pointValue} points ${(pointDirection=="add")?"to":"from"} ${targetFaction}. Redeem "${event.reward.title}", User ${event.user_name}`);

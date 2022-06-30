@@ -50,11 +50,11 @@ exports.addXp = (eventType,eventBody) => {
 	console.log(`ahoge log event ${pointType}, value ${pointVal}`);
 	ahogeLog(pointVal,pointType);
 	currentXp += pointVal;
+	console.log(`current xp: ${currentXp}`);
 };
 
 exports.streamOnline = () => {
 	var db = mongoHandler.getDb();
-	const date = new Date();
 
 	// find most recent stream log
 	const query = {"discordServer": process.env.DISCORD_SERVER_ID};
@@ -77,11 +77,7 @@ exports.streamOffline = () => {
 
 	var filter = {"discordServer": process.env.DISCORD_SERVER_ID, "dateEnded": {"$exists":false}};
 	var update = {"dateEnded": date.toString()};
-	db.collection("ahogeLog").findOneAndUpdate(filter, update, function (err, document) {
+	db.collection("ahogeLog").findOneAndUpdate(filter, update, function (err) {
 		if (err) throw err;
 	});
 };
-
-function resetXp() {
-
-}

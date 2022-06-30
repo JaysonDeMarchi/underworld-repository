@@ -7,7 +7,6 @@ const requestedSubscriptionTypes = process.env.SUB_TYPES.split(',');
 
 // variables needed for twitch calls
 const callbackUrl = process.env.CALLBACK_URL;
-const port = process.env.PORT || 6336;
 const twitchSigningSecret = process.env.TWITCH_SIGNING_SECRET;
 
 var ActiveSubscriptions = {};
@@ -31,7 +30,7 @@ exports.getEventSubSubscriptions = () => {
 		result.on('data', function (d) {
 			responseData = responseData + d;
 		})
-			.on('end', function (result) {
+			.on('end', function () {
 				var responseBody = JSON.parse(responseData);
 
 				// parse subscription list for redeem sub
@@ -62,7 +61,7 @@ exports.getEventSubSubscriptions = () => {
 				}
 			});
 	});
-	listRequest.on('error', (e) => { console.log("Error"); });
+	listRequest.on('error', (e) => { console.error(e.message); });
 	listRequest.end();
 };
 
@@ -105,7 +104,7 @@ exports.initializeRedeemSubscription = (subType) => {
 		result.on('data', function (d) {
 			responseData = responseData + d;
 		})
-			.on('end', function (result) {
+			.on('end', function () {
 				var responseBody = JSON.parse(responseData);
 				if (responseBody.hasOwnProperty('data') && responseBody.data.length === 1) {
 					ActiveSubscriptions[subType] = responseBody.data[0].id;
@@ -140,10 +139,10 @@ function endEventSubSubscription(subId) {
 		result.on('data', function (d) {
 			responseData = responseData + d;
 		})
-			.on('end', function (result) {
+			.on('end', function () {
 				console.log(`Sub ${subId} Stopped`);
 			});
 	});
-	listRequest.on('error', (e) => { console.log("Error"); });
+	listRequest.on('error', (e) => { console.error(e.message); });
 	listRequest.end();
 }

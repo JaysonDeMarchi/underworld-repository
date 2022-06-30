@@ -6,7 +6,7 @@ var mongoHandler = require('./mongoHandler');
 
 module.exports = {
 	updateUserPoints: function (pointValue, pointDirection, twitchId, twitchUsername) {
-		return new Promise(function (resolve, reject) {
+		return new Promise(function (resolve) {
 			var db = mongoHandler.getDb();
 
 			// gather user info
@@ -29,7 +29,7 @@ module.exports = {
 						userObj = {"discordServer":process.env.DISCORD_SERVER_ID,"twitchId":twitchId,"twitchUsername":twitchUsername,"total":pointValue*-1,"positive":0,"negative":pointValue};
 					}
 
-					db.collection("users").insertOne(userObj, function (err, insDocument) {
+					db.collection("users").insertOne(userObj, function (err) {
 						if(err) throw err;
 
 						resolve("document inserted");

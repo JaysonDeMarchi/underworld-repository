@@ -6,14 +6,12 @@ const { tokenLog } = require("./dbLog");
 const https = require('https');
 
 // Client for DB access
-var mongoHandler = require('./mongoHandler');
 
 // get tokens from json file
 const fs = require("fs");
 
 var currentAuthToken = "";
 var currentRefreshToken = "";
-const date = new Date().toISOString().slice(0,19);
 
 exports.clientAuthToken = () => { return currentAuthToken; };
 
@@ -44,7 +42,7 @@ var refreshOAuth = function () {
 			result.on('data', function (d) {
 				responseData = responseData + d;
 			})
-				.on('end', function (result) {
+				.on('end', function () {
 					var responseBody = JSON.parse(responseData);
 					console.log(responseBody);
 					if (responseBody.hasOwnProperty("access_token") && responseBody.hasOwnProperty("refresh_token")) {

@@ -22,15 +22,14 @@ process.on('uncaughtException', function (ex) {
 });
 
 // initial db connection
-mongoHandler.connectToServer((err, client) => {
+mongoHandler.connectToServer((err) => {
 	if (err) console.log(err);
 
 	// express setup
 	const app = express();
-	var http = require('http').createServer(app);
+	require('http').createServer(app);
 
 	// variables needed for twitch calls
-	const callbackUrl = process.env.CALLBACK_URL;
 	const port = process.env.PORT || 6336;
 	const twitchSigningSecret = process.env.TWITCH_SIGNING_SECRET;
 
@@ -89,18 +88,18 @@ mongoHandler.connectToServer((err, client) => {
 				result.on('data', function (d) {
 					responseData = responseData + d;
 				})
-					.on('end', function (result) {
+					.on('end', function () {
 						var responseBody = JSON.parse(responseData);
 						res.send(responseBody);
 					});
 			});
-			listRequest.on('error', (e) => { console.log("Error"); });
+			listRequest.on('error', (e) => { console.error(e.message); });
 			listRequest.end();
 		});
 	}
 
 	// verify signature of twitch even, check the "Verifying the event message" section of https://dev.twitch.tv/docs/eventsub/handling-webhook-events
-	const verifyTwitchSignature = (req, res, buf, encoding) => {
+	const verifyTwitchSignature = (req, res, buf) => {
 		const messageId = req.header("Twitch-Eventsub-Message-Id");
 		const timestamp = req.header("Twitch-Eventsub-Message-Timestamp");
 		const messageSignature = req.header("Twitch-Eventsub-Message-Signature");
