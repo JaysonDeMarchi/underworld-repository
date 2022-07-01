@@ -1,18 +1,17 @@
 // load environment variables
 require("dotenv").config();
 require('./dbLog');
+const { tokenLog } = require("./dbLog");
 
 const https = require('https');
 
 // Client for DB access
-var mongoHandler = require('./mongoHandler');
 
 // get tokens from json file
 const fs = require("fs");
 
 var currentAuthToken = "";
 var currentRefreshToken = "";
-const date = new Date().toISOString().slice(0,19);
 
 exports.clientAuthToken = () => { return currentAuthToken; };
 
@@ -43,10 +42,10 @@ var refreshOAuth = function () {
 			result.on('data', function (d) {
 				responseData = responseData + d;
 			})
-				.on('end', function (result) {
+				.on('end', function () {
 					var responseBody = JSON.parse(responseData);
 					console.log(responseBody);
-					if (responseBody.hasOwnProperty("access_token") && responseBody.hasOwnProperty("refresh_token")) {
+					if (responseBody.access_token !== undefined && responseBody.refresh_token !== undefined) {
 						// log success
 						const date = new Date().toISOString().slice(0,19);
 						console.log(`${date} Client Credentials Refreshed`);
@@ -61,7 +60,7 @@ var refreshOAuth = function () {
 						currentRefreshToken = responseBody.refresh_token;
 
 						// write new token values to json file
-						jsonData = JSON.stringify({access_token: responseBody.access_token, refresh_token: responseBody.refresh_token});
+						const jsonData = JSON.stringify({access_token: responseBody.access_token, refresh_token: responseBody.refresh_token});
 						fs.writeFile("../oauth.json", JSON.stringify(jsonData), err => {
 							if (err)
 								console.error(`COULD NOT UPDATE JSON FILE WITH NEW CLIENT TOKENS: access_token ${responseBody.access_token}, refresh_token ${responseBody.refresh_token}`);

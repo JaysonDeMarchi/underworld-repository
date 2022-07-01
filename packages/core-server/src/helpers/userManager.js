@@ -6,11 +6,12 @@ var mongoHandler = require('./mongoHandler');
 
 module.exports = {
 	updateUserPoints: function (pointValue, pointDirection, twitchId, twitchUsername) {
-		return new Promise(function (resolve, reject) {
+		return new Promise(function (resolve) {
 			var db = mongoHandler.getDb();
 
 			// gather user info
-			query = {"discordServer": process.env.DISCORD_SERVER_ID, "twitchId": twitchId};
+			const query = {"discordServer": process.env.DISCORD_SERVER_ID, "twitchId": twitchId};
+			let update = {};
 			if (pointDirection === "add")
 				update = {"$inc":{"total":pointValue,"positive":pointValue},"$set":{"twitchUsername":twitchUsername}};
 			else
@@ -21,13 +22,14 @@ module.exports = {
 
 				// if no user found to update, add it to the table
 				if (documents["lastErrorObject"]["n"] == 0) {
+					let userObj = {};
 					if (pointDirection === "add") {
 						userObj = {"discordServer":process.env.DISCORD_SERVER_ID,"twitchId":twitchId,"twitchUsername":twitchUsername,"total":pointValue,"positive":pointValue,"negative":0};
 					} else {
 						userObj = {"discordServer":process.env.DISCORD_SERVER_ID,"twitchId":twitchId,"twitchUsername":twitchUsername,"total":pointValue*-1,"positive":0,"negative":pointValue};
 					}
 
-					db.collection("users").insertOne(userObj, function (err, insDocument) {
+					db.collection("users").insertOne(userObj, function (err) {
 						if(err) throw err;
 
 						resolve("document inserted");
