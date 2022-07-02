@@ -143,7 +143,4 @@ mongoHandler.connectToServer((err) => {
 	});
 
 	app.use(express.static(path.join(__dirname, 'factionLiveView/build')));
-	app.get('/factionOverview', function (req, res) {
-		res.sendFile(path.join(__dirname, 'factionLiveView/build', 'index.html'));
-	});
 });
