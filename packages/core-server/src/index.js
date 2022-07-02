@@ -9,7 +9,6 @@ const path = require("path");
 const AhogeManager = require('./helpers/ahoge');
 const EventSub = require('./helpers/eventSub');
 const FactionPoints = require('./helpers/factionPoints');
-const authenticate = require('./model/authenticate');
 const mongoHandler = require('./helpers/mongoHandler');
 
 // redirect console output to log files
@@ -57,17 +56,14 @@ mongoHandler.connectToServer((err) => {
 		res.send("This is where Nexilitus goes genera421Oops");
 	});
 
-	app.get('/auth', async (req, res) => {
-		const url = new URL(req.query.clientUrl);
-		const authData = await authenticate(req.query);
-
-		res.cookie(`${authData.type}-token`, authData.access_token, {
-			httpOnly: true,
-			maxAge: authData.expires_in,
-			sameSite: 'Strict',
+	fs.readdir(`${__dirname}/routes/`, (_, routes) => {
+		routes.forEach((routeName) => {
+			const route = require(`${__dirname}/routes/${routeName}`);
+			app[route.request](
+				route.path,
+				route.resolve
+			);
 		});
-
-		res.redirect(url);
 	});
 
 	// Display active EventSub subscriptions (only in test mode)
