@@ -10,6 +10,9 @@
 	"dependencies": {
 		"pm2": "^5.2.0"
 	},
+	"devDependencies": {
+		"nx": "14.4.0"
+	},
 	"workspaces": [
 		"./packages/*"
 	]
