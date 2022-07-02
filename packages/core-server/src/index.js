@@ -51,11 +51,6 @@ mongoHandler.connectToServer((err) => {
 		res.send("perish.");
 	});
 
-	// easter egg :3
-	app.get("/snocket", (req, res) => {
-		res.send("This is where Nexilitus goes genera421Oops");
-	});
-
 	fs.readdir(`${__dirname}/routes/`, (_, routes) => {
 		routes.forEach((routeName) => {
 			const route = require(`${__dirname}/routes/${routeName}`);
