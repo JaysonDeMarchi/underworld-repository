@@ -4,7 +4,6 @@ require("dotenv").config();
 const crypto = require("crypto");
 const express = require("express");
 const fs = require("fs");
-const path = require("path");
 const EventSub = require('./helpers/eventSub');
 const mongoHandler = require('./helpers/mongoHandler');
 
@@ -53,6 +52,16 @@ mongoHandler.connectToServer((err) => {
 			app[route.request](
 				route.path,
 				route.resolve
+			);
+		});
+	});
+
+	fs.readdir(`${__dirname}/middlewares/`, (_, middlewares) => {
+		middlewares.forEach((middlewareName) => {
+			const middleware = require(`${__dirname}/middlewares/${middlewareName}`);
+			app.use(
+				middleware.path || '/',
+				middleware.resolve
 			);
 		});
 	});
@@ -141,6 +150,4 @@ mongoHandler.connectToServer((err) => {
 	changeStream.on('change', next => {
 		io.emit('update', { faction: next.fullDocument.faction, total: next.fullDocument.total });
 	});
-
-	app.use(express.static(path.join(__dirname, 'factionLiveView/build')));
 });
