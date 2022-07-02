@@ -1,7 +1,6 @@
 // load environment variables
 require("dotenv").config();
 
-const crypto = require("crypto");
 const express = require("express");
 const fs = require("fs");
 const EventSub = require('./helpers/eventSub');
@@ -26,7 +25,6 @@ mongoHandler.connectToServer((err) => {
 
 	// variables needed for twitch calls
 	const port = process.env.PORT || 6336;
-	const twitchSigningSecret = process.env.TWITCH_SIGNING_SECRET;
 
 	// start listening for gets/posts
 	const listener = app.listen(port, () => {
@@ -65,42 +63,6 @@ mongoHandler.connectToServer((err) => {
 			);
 		});
 	});
-
-	// verify signature of twitch even, check the "Verifying the event message" section of https://dev.twitch.tv/docs/eventsub/handling-webhook-events
-	const verifyTwitchSignature = (req, res, buf) => {
-		const messageId = req.header("Twitch-Eventsub-Message-Id");
-		const timestamp = req.header("Twitch-Eventsub-Message-Timestamp");
-		const messageSignature = req.header("Twitch-Eventsub-Message-Signature");
-
-		const time = Math.floor(new Date().getTime() / 1000);
-
-		if (Math.abs(time - timestamp) > 600) {
-			// must be < 10 minutes
-			console.log(`Verification Failed: timestamp > 10 minutes. Message Id: ${messageId}.`);
-			throw new Error("Ignore this request.");
-		}
-
-		if (!twitchSigningSecret) {
-			console.log(`Twitch signing secret is empty`);
-			throw new Error("Twitch signing secret is empty");
-		}
-
-		const computedSignature =
-			"sha256=" +
-			crypto
-				.createHmac("sha256", twitchSigningSecret)
-				.update(messageId + timestamp + buf)
-				.digest("hex");
-
-		if (messageSignature !== computedSignature) {
-			//throw new Error("Invalid Signature.");
-			console.log("Verification failed");
-			res.status(403).send("Forbidden");
-		}
-	};
-
-	// use verification function as express middleware
-	app.use(express.json({ verify: verifyTwitchSignature }));
 
 	// START EVENTSUB SUBSCRIPTION FOR CHANNEL REDEEMS
 	if (process.env.LISTEN_EVENTS == "true") {
