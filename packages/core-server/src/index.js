@@ -4,7 +4,6 @@ require("dotenv").config();
 const crypto = require("crypto");
 const express = require("express");
 const fs = require("fs");
-const https = require('https');
 const path = require("path");
 const AhogeManager = require('./helpers/ahoge');
 const EventSub = require('./helpers/eventSub');
@@ -60,34 +59,6 @@ mongoHandler.connectToServer((err) => {
 			);
 		});
 	});
-
-	// Display active EventSub subscriptions (only in test mode)
-	if (process.env.TEST_ENV == "true") {
-		app.get('/listWebhooks', (req, res) => {
-			var createWebHookParams = {
-				host: "api.twitch.tv",
-				path: "helix/eventsub/subscriptions",
-				method: 'GET',
-				headers: {
-					"Client-ID": process.env.TWITCH_CLIENT_ID,
-					"Authorization": "Bearer " + process.env.TWITCH_APP_BEARER
-				}
-			};
-			var responseData = "";
-			var listRequest = https.request(createWebHookParams, (result) => {
-				result.setEncoding('utf8');
-				result.on('data', function (d) {
-					responseData = responseData + d;
-				})
-					.on('end', function () {
-						var responseBody = JSON.parse(responseData);
-						res.send(responseBody);
-					});
-			});
-			listRequest.on('error', (e) => { console.error(e.message); });
-			listRequest.end();
-		});
-	}
 
 	// verify signature of twitch even, check the "Verifying the event message" section of https://dev.twitch.tv/docs/eventsub/handling-webhook-events
 	const verifyTwitchSignature = (req, res, buf) => {
