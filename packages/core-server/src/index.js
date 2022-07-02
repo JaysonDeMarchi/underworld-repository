@@ -26,22 +26,19 @@ mongoHandler.connectToServer((err) => {
 	// variables needed for twitch calls
 	const port = process.env.PORT || 6336;
 
-	// start listening for gets/posts
-	const listener = app.listen(port, () => {
-		console.log("Your app is listening on port " + listener.address().port);
-	});
-
-	// initialize faction overview socket
-	const io = require('socket.io')(listener, {
-		path: '/socket',
-		rejectUnauthorized: 'false'
-	});
-
-	// holds recent EventSub event IDs to prevent consuming duplicates
-
 	// Welcome Screen
 	app.get("/", (req, res) => {
 		res.send("perish.");
+	});
+
+	fs.readdir(`${__dirname}/middlewares/`, (_, middlewares) => {
+		middlewares.forEach((middlewareName) => {
+			const middleware = require(`${__dirname}/middlewares/${middlewareName}`);
+			app.use(
+				middleware.path || '/',
+				middleware.resolve
+			);
+		});
 	});
 
 	fs.readdir(`${__dirname}/routes/`, (_, routes) => {
@@ -54,14 +51,15 @@ mongoHandler.connectToServer((err) => {
 		});
 	});
 
-	fs.readdir(`${__dirname}/middlewares/`, (_, middlewares) => {
-		middlewares.forEach((middlewareName) => {
-			const middleware = require(`${__dirname}/middlewares/${middlewareName}`);
-			app.use(
-				middleware.path || '/',
-				middleware.resolve
-			);
-		});
+	// start listening for gets/posts
+	const listener = app.listen(port, () => {
+		console.log("Your app is listening on port " + listener.address().port);
+	});
+
+	// initialize faction overview socket
+	const io = require('socket.io')(listener, {
+		path: '/socket',
+		rejectUnauthorized: 'false'
 	});
 
 	// START EVENTSUB SUBSCRIPTION FOR CHANNEL REDEEMS
