@@ -31,30 +31,30 @@ mongoHandler.connectToServer((err) => {
 		res.send("perish.");
 	});
 
-	fs.readdir(`${__dirname}/middlewares/`, (_, middlewares) => {
-		middlewares.forEach((middlewareName) => {
-			const middleware = require(`${__dirname}/middlewares/${middlewareName}`);
-			app.use(
-				middleware.path || '/',
-				middleware.resolve
-			);
-		});
-	});
+	const resources = [
+		{
+			params: app,
+			group: 'middlewares',
+		},
+		{
+			params: app,
+			group: 'routes',
+		},
+		{
+			params: server,
+			group: 'websockets',
+		},
+	];
 
-	fs.readdir(`${__dirname}/routes/`, (_, routes) => {
-		routes.forEach((routeName) => {
-			const route = require(`${__dirname}/routes/${routeName}`);
-			app[route.request](
-				route.path,
-				route.resolve
-			);
-		});
-	});
+	resources.map((resource) => {
+		const group = resource.group;
+		const params = resource.params;
 
-	fs.readdir(`${__dirname}/websockets/`, (_, websockets) => {
-		websockets.forEach((websocketName) => {
-			const websocket = require(`${__dirname}/websockets/${websocketName}`);
-			websocket.configure(server);
+		fs.readdir(`${__dirname}/${group}/`, (_, entities) => {
+			entities.forEach((entityName) => {
+				const entity = require(`${__dirname}/${group}/${entityName}`);
+				entity.configure(params);
+			});
 		});
 	});
 

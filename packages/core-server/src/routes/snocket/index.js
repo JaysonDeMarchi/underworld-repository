@@ -1,9 +1,11 @@
+const resolver = async (req, res) => {
+	res.send('This is where Nexilitus goes genera421Oops');
+};
+
 // easter egg :3
 const snocket = {
-	request: 'get',
-	path: '/snocket',
-	resolve: async (req, res) => {
-		res.send('This is where Nexilitus goes genera421Oops');
+	configure: function (app) {
+		app.get('/snocket', resolver);
 	},
 };
 

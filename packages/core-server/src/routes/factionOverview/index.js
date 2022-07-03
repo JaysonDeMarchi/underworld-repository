@@ -1,10 +1,12 @@
 const path = require("path");
 
+const resolver = async (req, res) => {
+	res.sendFile(path.join(__dirname, '../../factionLiveView/build', 'index.html'));
+};
+
 const factionOverview = {
-	request: 'get',
-	path: '/factionOverview',
-	resolve: async (req, res) => {
-		res.sendFile(path.join(__dirname, '../../factionLiveView/build', 'index.html'));
+	configure: (app) => {
+		app.get('/factionOverview', resolver);
 	},
 };
 
