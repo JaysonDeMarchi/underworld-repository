@@ -1,3 +1,4 @@
+const app = require('../../app');
 const authenticate = require('./authenticate');
 
 const resolver = async (req, res) => {
@@ -14,7 +15,7 @@ const resolver = async (req, res) => {
 };
 
 const authentication = {
-	configure: function (app) {
+	configure: function () {
 		app.get('/auth', resolver);
 	},
 };

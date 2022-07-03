@@ -1,6 +1,7 @@
 const AhogeManager = require('../../helpers/ahoge');
 const EventSub = require('../../helpers/eventSub');
 const FactionPoints = require('../../helpers/factionPoints');
+const app = require('../../app');
 
 let recentNotifIds = new Set();
 
@@ -53,7 +54,7 @@ const resolver = async (req, res) => {
 };
 
 const notification = {
-	configure: (app) => {
+	configure: () => {
 		app.post('/notification', resolver);
 	},
 };

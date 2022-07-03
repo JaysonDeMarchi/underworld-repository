@@ -1,5 +1,6 @@
-const express = require('express');
+const app = require('../../app');
 const crypto = require('crypto');
+const express = require('express');
 
 const twitchSigningSecret = process.env.TWITCH_SIGNING_SECRET;
 
@@ -37,7 +38,7 @@ const resolver = express.json({
 });
 
 const verifyTwitchSignature = {
-	configure: (app) => {
+	configure: () => {
 		app.use(resolver);
 	},
 };

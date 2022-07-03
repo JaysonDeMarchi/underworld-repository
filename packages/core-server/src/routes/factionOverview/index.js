@@ -1,3 +1,4 @@
+const app = require('../../app');
 const path = require("path");
 
 const resolver = async (req, res) => {
@@ -5,7 +6,7 @@ const resolver = async (req, res) => {
 };
 
 const factionOverview = {
-	configure: (app) => {
+	configure: () => {
 		app.get('/factionOverview', resolver);
 	},
 };

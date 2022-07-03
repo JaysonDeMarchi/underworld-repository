@@ -1,4 +1,5 @@
 require('dotenv');
+const app = require('../../app');
 const https = require('https');
 
 const resolver = async (req, res) => {
@@ -34,7 +35,7 @@ const resolver = async (req, res) => {
 const listWebhooks = {
 	request: 'get',
 	path: '/listWebhooks',
-	configure: (app) => {
+	configure: () => {
 		app.get('/listWebhooks', resolver);
 	},
 };

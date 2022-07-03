@@ -1,3 +1,4 @@
+const server = require('../../server');
 const mongoHandler = require('../../helpers/mongoHandler');
 
 // client list to maintain
@@ -8,7 +9,7 @@ const db = mongoHandler.getDb();
 const collection = db.collection('sprints');
 
 const factionInfo = {
-	configure: (server) => {
+	configure: () => {
 		const io = require('socket.io')(server, {
 			path: '/socket',
 			rejectUnauthorized: 'false',

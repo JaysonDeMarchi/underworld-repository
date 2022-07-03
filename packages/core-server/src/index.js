@@ -1,10 +1,11 @@
 // load environment variables
 require("dotenv").config();
 
-const express = require("express");
-const fs = require("fs");
 const EventSub = require('./helpers/eventSub');
+const app = require('./app');
+const fs = require('fs');
 const mongoHandler = require('./helpers/mongoHandler');
+const server = require('./server');
 
 // redirect console output to log files
 let logConsoleStream = fs.createWriteStream(__dirname + '/logs/console.log', { flags: 'a' });
@@ -22,38 +23,22 @@ const port = process.env.PORT || 6336;
 mongoHandler.connectToServer((err) => {
 	if (err) console.log(err);
 
-	// express setup
-	const app = express();
-	const server = require('http').createServer(app);
-
 	// Welcome Screen
 	app.get("/", (req, res) => {
 		res.send("perish.");
 	});
 
-	const resources = [
-		{
-			params: app,
-			group: 'middlewares',
-		},
-		{
-			params: app,
-			group: 'routes',
-		},
-		{
-			params: server,
-			group: 'websockets',
-		},
+	const resourceTypes = [
+		'middlewares',
+		'routes',
+		'websockets',
 	];
 
-	resources.map((resource) => {
-		const group = resource.group;
-		const params = resource.params;
-
-		fs.readdir(`${__dirname}/${group}/`, (_, entities) => {
-			entities.forEach((entityName) => {
-				const entity = require(`${__dirname}/${group}/${entityName}`);
-				entity.configure(params);
+	resourceTypes.map((resourceType) => {
+		fs.readdir(`${__dirname}/${resourceType}/`, (_, resources) => {
+			resources.forEach((resourceName) => {
+				const resource = require(`${__dirname}/${resourceType}/${resourceName}`);
+				resource.configure();
 			});
 		});
 	});
