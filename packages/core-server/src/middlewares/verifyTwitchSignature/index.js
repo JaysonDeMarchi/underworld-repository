@@ -39,7 +39,7 @@ const resolver = express.json({
 
 const verifyTwitchSignature = {
 	configure: () => {
-		app.use(resolver);
+		app.use('/notification', resolver);
 	},
 };
 
