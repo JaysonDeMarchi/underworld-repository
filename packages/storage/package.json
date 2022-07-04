@@ -2,7 +2,14 @@
   "name": "@underworld/storage",
   "version": "1.0.0",
   "main": "index.js",
+	"scripts": {
+		"test": "jest unit",
+		"test-integration": "jest integration"
+	},
   "dependencies": {
     "mongodb": "^4.7.0"
+  },
+  "devDependencies": {
+    "jest": "^28.1.2"
   }
 }
