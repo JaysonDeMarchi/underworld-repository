@@ -1,5 +1,8 @@
 {
   "name": "@underworld/storage",
   "version": "1.0.0",
-  "main": "index.js"
+  "main": "index.js",
+  "dependencies": {
+    "mongodb": "^4.7.0"
+  }
 }
