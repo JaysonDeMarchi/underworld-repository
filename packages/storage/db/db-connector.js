@@ -1,5 +1,6 @@
 const MongoClient = require('mongodb').MongoClient;
 
+let client = null;
 let db = null;
 
 const dbConnector = {
@@ -7,7 +8,7 @@ const dbConnector = {
 		if (db) {
 			return db;
 		}
-		const client = await MongoClient.connect(
+		client = await MongoClient.connect(
 			process.env.CONN_STRING,
 			{
 				useNewUrlParser: true,
@@ -16,6 +17,14 @@ const dbConnector = {
 		);
 		db = client.db('master');
 		return db;
+	},
+
+	disconnect: async () => {
+		if (!client) {
+			return;
+		}
+		client.close();
+		db = null;
 	},
 };
 

@@ -62,7 +62,7 @@ test('Create a new entry', async () => {
 });
 
 test('Update an existing entry', async () => {
-	const update = { discordID: 11 };
+	const update = { twitchId: 11 };
 	const results = await dbAdaptor.updateOne(collectionName, testUser, update);
 	expect(results.modifiedCount).toBe(1);
 	expect(results.upsertedCount).toBe(0);
