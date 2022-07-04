@@ -23,12 +23,10 @@ const getSchema = async () => {
 	return await Promise.all([
 		getComponent('typeDefs'),
 		getComponent('resolvers'),
-	]).then((results) => {
-		return {
-			typeDefs: results[0],
-			resolvers: results[1],
-		};
-	});
+	]).then((results) => ({
+		typeDefs: results[0],
+		resolvers: results[1],
+	}));
 };
 
 module.exports = getSchema();

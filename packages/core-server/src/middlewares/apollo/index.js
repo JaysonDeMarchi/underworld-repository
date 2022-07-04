@@ -1,4 +1,5 @@
 const app = require('../../app');
+const authentication = require('./authentication');
 const server = require('../../server');
 const { ApolloServer } = require('apollo-server-express');
 const { ApolloServerPluginDrainHttpServer } = require('apollo-server-core');
@@ -9,6 +10,9 @@ const apollo = {
 		const apolloServer = new ApolloServer({
 			typeDefs,
 			resolvers,
+			context: async ({ req }) => ({
+				user: await authentication.getUserContext(req),
+			}),
 			csrfPrevention: true,
 			plugins: [
 				ApolloServerPluginDrainHttpServer({ httpServer: server }),

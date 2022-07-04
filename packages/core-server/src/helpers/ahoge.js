@@ -5,7 +5,6 @@ require("dotenv").config();
 
 var currentXp = 0;
 
-
 exports.addXp = (eventType,eventBody) => {
 	// calculate how many points to add
 	let pointVal = 0;

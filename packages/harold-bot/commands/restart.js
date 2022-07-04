@@ -23,7 +23,6 @@ module.exports = (dbo, message) => {
 			msg = `${msg}\``;
 			message.channel.send(msg);
 
-
 			// query for top 10 user totals (non-deleted discord users with at least point interaction only)
 			query = {"discordServer": discordServerID, "discordID": {"$exists":true}, "dateDeleted": {"$exists":false}, "$or":[{"positive":{"$ne":0}},{"negative":{"$ne":0}}]};
 			sortReq = {"total":-1};
