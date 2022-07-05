@@ -14,6 +14,19 @@ const dbAdaptor = {
 		return entryWasDeleted;
 	},
 
+	deleteMany: async (collectionName, query) => {
+		let entryWasDeleted = false;
+		try {
+			const db = await dbConnector.connect();
+			const collection = db.collection(collectionName);
+			const results = await collection.deleteMany(query);
+			entryWasDeleted = Boolean(results.deletedCount);
+		} catch (err) {
+			console.error(err);
+		}
+		return entryWasDeleted;
+	},
+
 	findOne: async (collectionName, query) => {
 		let entry = null;
 		try {
