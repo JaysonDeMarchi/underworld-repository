@@ -3,7 +3,7 @@ const { gql } = require('apollo-server-express');
 const typeDefs = gql`
 input UserInput {
 	discordId: String
-	discordNickname: String
+	nickname: String
 	faction: String
 	negative: Int
 	positive: Int

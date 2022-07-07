@@ -1,30 +1,33 @@
 {
-  "name": "@underworld/core-server",
-  "version": "1.0.0",
-  "description": "Twitch webhooks implementation to consume channel redeems and update the faction cup",
-  "main": "src/index.js",
-  "scripts": {
-    "start": "node src/index.js",
-    "dev": "nodemon src/index.js",
-    "debug": "nodemon --inspect src/index.js"
-  },
-  "author": "Sneaky_Waffles",
-  "license": "MIT",
-  "devDependencies": {
-    "nodemon": "^2.0.7"
-  },
-  "dependencies": {
-    "apollo-server-express": "^3.9.0",
-    "axios": "^0.27.2",
-    "cookie-parser": "^1.4.6",
-    "dotenv": "^9.0.1",
-    "express": "^4.17.1",
-    "http-proxy": "^1.18.1",
-    "mongodb": "^3.6.6",
-    "ngrok": "^4.0.1",
-    "socket.io": "^4.4.1",
-    "twitch": "^4.5.5",
-    "twitch-eventsub": "^4.5.5",
-    "twitch-eventsub-ngrok": "^4.5.5"
-  }
+	"name": "@underworld/core-server",
+	"version": "1.0.0",
+	"description": "Twitch webhooks implementation to consume channel redeems and update the faction cup",
+	"main": "src/index.js",
+	"scripts": {
+		"start": "node src/index.js",
+		"dev": "nodemon src/index.js",
+		"debug": "nodemon --inspect src/index.js",
+		"test": "jest unit",
+		"test-integration": "jest integration"
+	},
+	"author": "Sneaky_Waffles",
+	"license": "MIT",
+	"devDependencies": {
+		"jest": "^28.1.2",
+		"nodemon": "^2.0.7"
+	},
+	"dependencies": {
+		"apollo-server-express": "^3.9.0",
+		"axios": "^0.27.2",
+		"cookie-parser": "^1.4.6",
+		"dotenv": "^9.0.1",
+		"express": "^4.17.1",
+		"http-proxy": "^1.18.1",
+		"mongodb": "^3.6.6",
+		"ngrok": "^4.0.1",
+		"socket.io": "^4.4.1",
+		"twitch": "^4.5.5",
+		"twitch-eventsub": "^4.5.5",
+		"twitch-eventsub-ngrok": "^4.5.5"
+	}
 }

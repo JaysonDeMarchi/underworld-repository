@@ -1,12 +1,17 @@
+const dbAdaptor = require('../db/db-adaptor');
 const userRepository = require('./user');
 
-const testUser = {
+const collectionName = 'users';
+const discordServer = '000000000000000000';
+
+const validUser = {
 	discordId: '69',
-	discordServer: '988262220238577704',
+	discordServer,
 };
-const noMatchQuery = {
+
+const invalidUser = {
 	discordId: '00',
-	discordServer: '000000000000000000',
+	discordServer,
 };
 
 /*
@@ -15,52 +20,59 @@ const noMatchQuery = {
  * this will result in cleaner setup/teardown.
  */
 beforeEach(async () => {
-	await userRepository.save(testUser);
+	await userRepository.save(validUser);
 });
 
 afterEach(async () => {
-	await Promise.all([
-		testUser,
-		noMatchQuery,
-	].map(
-		(user) => userRepository.delete(user)
-	));
+	await dbAdaptor.deleteMany(collectionName, { discordServer });
 });
 
 test('Delete a user', async () => {
-	const results = await userRepository.delete(testUser);
+	const newUser = {
+		discordId: '04',
+		discordServer,
+	};
+	await userRepository.save(newUser);
+	const results = await userRepository.delete(newUser);
 	expect(results).toBe(true);
 });
 
 test('Fail to delete a user', async () => {
-	expect(await userRepository.delete(noMatchQuery)).toBe(false);
+	expect(await userRepository.delete(invalidUser)).toBe(false);
 });
 
 test('Find a user', async () => {
-	const existingUser = await userRepository.get(testUser);
-	expect(existingUser.discordId).toBe(testUser.discordId);
+	const existingUser = await userRepository.get(validUser);
+	expect(existingUser.discordId).toBe(validUser.discordId);
 });
 
 test('Fail to find a user', async () => {
-	const existingUser = await userRepository.get(noMatchQuery);
+	const existingUser = await userRepository.get(invalidUser);
 	expect(existingUser).toBe(null);
 });
 
 test('Create a new user', async () => {
-	const results = await userRepository.save(noMatchQuery);
-	const existingUser = await userRepository.get(noMatchQuery);
+	const newUser = {
+		discordId: '05',
+		discordServer,
+	};
+	const results = await userRepository.save(newUser);
+	const existingUser = await userRepository.get(newUser);
 	expect(results).toBe(true);
-	expect(existingUser.discordId).toBe(existingUser.discordId);
+	expect(existingUser.discordId).toBe(newUser.discordId);
 });
 
 test('Update an existing user', async () => {
-	const updatedUser = {
-		...testUser,
-		twitchId: 11,
+	const newUser = {
+		discordId: '06',
+		discordServer,
 	};
-	const results = await userRepository.save(updatedUser);
-	const existingUser = await userRepository.get(updatedUser);
+	await userRepository.save(newUser);
+	newUser.nickname = 'Automated Test User';
+	const results = await userRepository.save(newUser);
+	const existingUser = await userRepository.get(newUser);
 	expect(results).toBe(true);
-	expect(existingUser.discordId).toBe(updatedUser.discordId);
-	expect(existingUser.discordServer).toBe(updatedUser.discordServer);
+	expect(existingUser.discordId).toBe(newUser.discordId);
+	expect(existingUser.discordServer).toBe(newUser.discordServer);
+	expect(existingUser.nickname).toBe(newUser.nickname);
 });
