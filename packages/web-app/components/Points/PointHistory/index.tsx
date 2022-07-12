@@ -17,10 +17,7 @@ export default function PointHistory({
 	source,
 	username
 }: PointHistoryInterface) {
-	var indicator = "+"
-	if(!direction){
-		indicator = "-"
-	}
+	const indicator = (!direction) ? '+' : '-';
 	return <>
 		<div className="PointHistory">
 			<div className="pointCapsule">
