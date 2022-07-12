@@ -1,23 +1,19 @@
 /** @jsxImportSource theme-ui */
 import React from 'react';
 
-const getUrl = (baseUrl, searchParams) => {
-	const url = new URL(baseUrl);
+const getUrl = (baseUrl: string, searchParams: any) => {
+	const searchQuery = new URLSearchParams(searchParams);
 
-	Object.entries(searchParams).map(([attribute, value]) => {
-		url.searchParams.set(attribute, value);
-	});
-
-	return url.toString();
+	return `${baseUrl}/${searchQuery}`;
 };
 
-const integrations = {
+const integrations: any = {
 	discord: {
 		baseUrl: 'https://discord.com/api/oauth2/authorize',
 		id: 'connect-to-discord',
 		label: 'Connect to Discord',
 		searchParams: {
-			client_id: process.env.DISCORD_CLIENT_ID,
+			client_id: process.env.DISCORD_CLIENT_ID || '',
 			response_type: 'code',
 			scope: 'identify',
 		},
@@ -29,7 +25,7 @@ const integrations = {
 		id: 'connect-to-twitch',
 		label: 'Connect to Twitch',
 		searchParams: {
-			client_id: process.env.TWITCH_CLIENT_ID,
+			client_id: process.env.TWITCH_CLIENT_ID || '',
 			response_type: 'code',
 			scope: 'user:read:email',
 		},
@@ -38,10 +34,15 @@ const integrations = {
 	},
 };
 
-export default function Button({
+export interface ButtonInterface {
+	integration: string,
+	redirectUri: string,
+};
+
+const Button = ({
 	integration,
 	redirectUri,
-}) {
+}: ButtonInterface) => {
 	const context = integrations[integration];
 	context.searchParams.redirect_uri = redirectUri;
 	return <>
@@ -55,3 +56,5 @@ export default function Button({
 		>{context.label}</a>
 	</>;
 }
+
+export default Button;

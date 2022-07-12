@@ -1,17 +1,15 @@
-import React from 'react';
-import ExpBar from './index';
+import { Meta, Story } from '@storybook/react';
+import ExpBar, { ExpBarInterface } from './index';
 
-const config = {
+export default {
 	component: ExpBar,
 	title: 'Points / ExpBar',
-};
+} as Meta;
 
-const Template = (args) => <ExpBar {...args} />;
+const Template: Story<ExpBarInterface> = (args) => <ExpBar {...args} />;
 
 export const ShowBar = Template.bind({});
 ShowBar.args = {
 	level: 0,
 	width: 0
 };
-
-export default config;

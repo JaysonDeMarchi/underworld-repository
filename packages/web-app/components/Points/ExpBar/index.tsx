@@ -2,10 +2,15 @@
 import React from 'react';
 import './assets/exp.css';
 
+export interface ExpBarInterface {
+	level: number,
+	width: number,
+};
+
 export default function ExpBar({
 	level,
 	width
-}) {
+}: ExpBarInterface) {
 	var showWidth = width + "%"
 	return <>
       <div className="ExpBar">
