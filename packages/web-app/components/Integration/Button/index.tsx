@@ -37,7 +37,7 @@ const integrations: any = {
 export interface ButtonInterface {
 	integration: string,
 	redirectUri: string,
-};
+}
 
 const Button = ({
 	integration,
@@ -55,6 +55,6 @@ const Button = ({
 			}}
 		>{context.label}</a>
 	</>;
-}
+};
 
 export default Button;

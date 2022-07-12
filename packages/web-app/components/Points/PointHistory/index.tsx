@@ -8,7 +8,7 @@ export interface PointHistoryInterface {
 	direction: number,
 	source: string,
 	username: string,
-};
+}
 
 export default function PointHistory({
 	faction,
