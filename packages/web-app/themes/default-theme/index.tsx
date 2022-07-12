@@ -1,5 +1,5 @@
 import { ThemeProvider } from 'theme-ui';
-import theme from './theme'
+import theme from './theme';
 
 interface ThemeInterface {
 	Component: any

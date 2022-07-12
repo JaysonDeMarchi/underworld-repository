@@ -33,7 +33,7 @@ export default function App() {
           sortedFactions.sort((a,b) => {if(a.total > b.total) return -1; if(a.total < b.total) return 1; return 0;});
           setFactions(sortedFactions);
       });
-  }, [])
+  }, [ factions ])
 
   return (
     <div className="App">

@@ -1,0 +1,35 @@
+#!/bin/bash
+
+set -e
+
+PROJECT_ROOT="$(dirname $0)/.."
+# We need to export the STAGE so we have access to it when naming our pm2 processes
+# see: ecosystem.config.js
+export STAGE="$1"
+RELEASE_TARGET="$2"
+
+if [ -z "$STAGE" ]; then
+	echo "Missing stage parameter (e.g. staging, production)"
+	echo "- e.g. deploy <stage> <release_target>"
+	exit
+fi
+
+if [ -z "$RELEASE_TARGET" ]; then
+	echo "Missing release target parameter (e.g. release/vX.Y.Z, develop)"
+	echo "- e.g. deploy <stage> <release_target>"
+	exit
+fi
+
+pushd "$PROJECT_ROOT" > /dev/null
+
+git fetch
+
+npm run stop
+
+git checkout "$RELEASE_TARGET"
+
+npm install
+npm run build
+npm run start
+
+popd > /dev/null

@@ -2,17 +2,22 @@
 import React from 'react';
 import './assets/pointhistory.css';
 
+export interface PointHistoryInterface {
+	faction: string,
+	value: number,
+	direction: number,
+	source: string,
+	username: string,
+}
+
 export default function PointHistory({
 	faction,
 	value,
 	direction,
 	source,
 	username
-}) {
-	var indicator = "+"
-	if(!direction){
-		indicator = "-"
-	}
+}: PointHistoryInterface) {
+	const indicator = (!direction) ? '+' : '-';
 	return <>
 		<div className="PointHistory">
 			<div className="pointCapsule">
