@@ -1,0 +1,14 @@
+name: Pipeline
+on: [push]
+jobs:
+  Build-And-Deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout the Repostiory
+        uses: actions/checkout@v3
+      - name: Setup Node
+        uses: actions/setup-node@v3
+        with:
+          node-version: 17.3.x
+          cache: npm
+      - run: ./bin/deploy staging HEAD
