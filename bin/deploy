@@ -22,17 +22,25 @@ fi
 
 pushd "$PROJECT_ROOT" > /dev/null
 
-git fetch
+git fetch --all
 
 # On a new environment there will be no pm2 installed.
 if [ -d "./node_modules/pm2" ]; then
 	npm run stop
 fi
 
+# We want to make sure there is a local main for nx to build properly.
+if [ -z "$(git show-ref refs/heads/main)" ]; then
+	git branch --track main
+fi
+
 git checkout "$RELEASE_TARGET"
 
+echo "��Install"
 npm install
+echo "��Build"
 npm run build
+echo "��Start"
 npm run start
 
 popd > /dev/null
