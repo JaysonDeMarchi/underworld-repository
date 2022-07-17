@@ -24,7 +24,10 @@ pushd "$PROJECT_ROOT" > /dev/null
 
 git fetch
 
-npm run stop
+# On a new environment there will be no pm2 installed.
+if [ -d "./node_modules/pm2" ]; then
+	npm run stop
+fi
 
 git checkout "$RELEASE_TARGET"
 
